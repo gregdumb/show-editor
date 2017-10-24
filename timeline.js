@@ -3,12 +3,13 @@ Timeline.init = function() {
 	
 	// UI variables
 	this.height = 400;
-	this.timeBarHeight = 30;
+	this.timeBarHeight = 40;
+	this.timeMarkerLabelSize = 14;
 	
 	this.sideBarWidth = 100;
 	this.zoomBarHeight = 30;
 	
-	this.numTracks = 4;
+	this.numTracks = 4; // This will be discarded when files are implemented
 	this.trackHeight = 20;
 	this.trackSpacing = 10;
 	
@@ -33,7 +34,7 @@ Timeline.init = function() {
 	this.timeViewPosition = 0; // Time where the left of the view is
 	this.timeScale = 100;
 	this.timeScaleMin = 10;
-	this.timeScaleMax = 200;
+	this.timeScaleMax = 400 ;
 	
 	this.timePanStartX = 0;
 	this.timePanStartViewPosition = 0;
@@ -102,7 +103,7 @@ Timeline.mouseDown = function(e) {
 		clickedTime = t.xToTime(x);
 		
 		// Find clicked track
-		for(let i = 0; i < t.numTracks; i++) {
+		for(let i = 0; i < t.tracks.length; i++) {
 			let trackBot = t.timeBarHeight + (i+1) * (t.trackHeight + t.trackSpacing);
 			let trackTop = trackBot - t.trackHeight;
 			if(y < trackBot && y > trackTop) {
@@ -290,7 +291,9 @@ Timeline.drawGUI = function() {
 		var xpos = this.timeToX(currentMarker);
 		var ypos = this.timeBarHeight / 3
 		this.drawLine(xpos, 0, xpos, ypos);
-		this.drawText(currentMarker.toTimeString(), xpos, ypos + 12, this.lineColor, "10px");
+		var labelSize = this.timeMarkerLabelSize + "px";
+		var labelOffset = this.timeMarkerLabelSize + 2;
+		this.drawText(currentMarker.toTimeString(), xpos, ypos + labelOffset, this.lineColor, labelSize);
 		currentMarker += markerSpacing;
 	} while (xpos < w);
 	
@@ -299,7 +302,7 @@ Timeline.drawGUI = function() {
 	this.drawLine(0, zoomBarY, side, zoomBarY, this.lineColor);
 	
 	// Draw channel bars
-	for(let i = 0; i < this.numTracks; i++) {
+	for(let i = 0; i < this.tracks.length; i++) {
 		// Draw bar
 		this.ctx.fillStyle = this.trackColor;
 		let yPos = this.timeBarHeight + this.trackSpacing + i * (this.trackHeight + this.trackSpacing);
