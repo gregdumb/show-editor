@@ -14,6 +14,7 @@ function Track(id, keyframes) {
 function Keyframe(channel, time, state) {
 	this.channel = channel;
 	this.time = time;
+	this.oldTime = time;
 	this.state = state;
 	this.selected = false;
 }

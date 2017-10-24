@@ -39,6 +39,8 @@ Timeline.init = function() {
 	this.timePanStartX = 0;
 	this.timePanStartViewPosition = 0;
 	
+	this.keyframeDragStartX = -1;
+	
 	// State
 	this.state = {};
 	this.state.draggingTime = false;
@@ -51,6 +53,7 @@ Timeline.init = function() {
 	
 	// Keyframing
 	this.tracks = [];
+	this.selectedKeyframes = [];
 	
 	// Create canvas
 	this.container = $("#timeline-container");
@@ -190,8 +193,24 @@ Timeline.mouseMoved = function(e) {
 	else if(t.state.draggingPan) {
 		var deltaX = t.timePanStartX - x;
 		var deltaTime = deltaX / t.timeScale;
-		console.log(t.timePanStartViewPosition);
+		//console.log(t.timePanStartViewPosition);
 		t.timeViewPosition = Math.clamp(t.timePanStartViewPosition + deltaTime, 0, t.duration);
+	}
+	
+	else if(t.state.draggingKeyframes) {
+		
+		if(t.keyframeDragStartX == -1) t.keyframeDragStartX = x;
+		
+		var deltaX = x - t.keyframeDragStartX;
+		var deltaTime = deltaX / t.timeScale;
+		
+		var selKeys = t.selectedKeyframes;
+		
+		for(let i = 0; i < selKeys.length; i++) {
+			var k = selKeys[i];
+			
+			k.time = k.oldTime + deltaTime;
+		}
 	}
 }
 
@@ -239,6 +258,10 @@ Timeline.keyDown = function(e) {
 		Timeline.state.draggingKeyframes = true;
 	}
 	
+	if(key == KEY_I) {
+		Timeline.performKeyframeInvert();
+	}
+	
 	if(key == KEY_SHIFT) {
 		Timeline.state.holdingShift = true;
 	}
@@ -252,7 +275,11 @@ Timeline.keyUp = function(e) {
 	var key = e.keyCode;
 	
 	if(key == KEY_G) {
-		Timeline.state.draggingKeyframes = true;
+		Timeline.keyframeDragStartX = -1;
+		Timeline.state.draggingKeyframes = false;
+		for(let i = 0; i < Timeline.selectedKeyframes.length; i++) {
+			Timeline.selectedKeyframes[i].oldTime = Timeline.selectedKeyframes[i].time;
+		}
 	}
 	
 	if(key == KEY_SHIFT) {
@@ -362,6 +389,8 @@ Timeline.drawGUI = function() {
 Timeline.update = function() {
 	
 	this.updateTime();
+	
+	this.selectedKeyframes = this.getSelectedKeyframes();
 	
 	this.drawGUI();
 	
@@ -487,6 +516,22 @@ Timeline.getTimeMarkerSpacing = function() {
 	return 10;
 }
 
+Timeline.getSelectedKeyframes = function() {
+	var selectedKeyframes = [];
+	
+	for(let i = 0; i < this.tracks.length; i++) {
+		var t = this.tracks[i];
+		
+		for(let j = 0; j < t.keyframes.length; j++) {
+			if(t.keyframes[j].selected === true) {
+				selectedKeyframes.push(t.keyframes[j]);
+			}
+		}
+	}
+	
+	return selectedKeyframes;
+}
+
 Timeline.deleteSelectedKeyframes = function() {
 	for(let i = 0; i < this.tracks.length; i++) {
 		
@@ -537,6 +582,17 @@ Timeline.performAlign = function() {
 	for(let k = 0; k < selectedKeyframes.length; k++) {
 		
 		selectedKeyframes[k].time = avgTime;
+	}
+}
+
+Timeline.performKeyframeInvert = function() {
+	var selected = this.selectedKeyframes;
+	
+	console.log(selected);
+	
+	for(let i = 0; i < selected.length; i++) {
+		
+		selected[i].state = !selected[i].state;
 	}
 }
 
