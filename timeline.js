@@ -582,6 +582,7 @@ Timeline.performAlign = function() {
 	for(let k = 0; k < selectedKeyframes.length; k++) {
 		
 		selectedKeyframes[k].time = avgTime;
+		selectedKeyframes[k].oldTime = avgTime;
 	}
 }
 
