@@ -1,0 +1,44 @@
+<!doctype html>
+
+<head>
+	<!-- Import Google Icon Font -->
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- Import materialize.css -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" rel="stylesheet">
+	<link href="./index.css" rel="stylesheet">
+	<title>Xmas app</title>
+</head>
+
+<body>
+	<noscript>
+		You need to enable JavaScript to run this app.
+	</noscript>
+	
+	<!-- REACT-MATERIALIZE -->
+	<!-- Import jQuery before materialize.js -->
+	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
+	
+	<div id="app">
+		
+		<a class="waves-effect waves-light btn" id="btn-download">Download</a>
+		
+		<div id="mediacontrols-container">
+			<a class="btn-floating btn-large waves-effect waves-light blue" id="btn-play"><i class="material-icons" id="icon-play">play_arrow</i></a>
+		</div>
+		
+		<div id="waveform-container"></div>
+		
+		<div id="timeline-container"></div>
+	</div>
+	
+	<!-- SCRIPTS -->
+	<!--script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.7.19/fabric.js"></script-->
+	<script src="constants.js"></script>
+	<script src="objects.js"></script>
+	<script src="timeline.js"></script>
+	<script src="startgui.js"></script>
+</body>
+
+</html>

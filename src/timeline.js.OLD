@@ -1,0 +1,146 @@
+
+var showData = [{
+	"channel": 1,
+	"on": 1,
+	"off": 2
+}, {
+	"channel": 1,
+	"on": 3,
+	"off": 4
+}, {
+	"channel": 2,
+	"on": 2.5,
+	"off": 3
+}
+];
+
+var tData = {
+	numChannels: 4,
+	chHeight: 30,
+	chWidth: 15
+};
+
+var selected_keyframes = [];
+
+var canvas = new fabric.Canvas("timeline-canvas");
+
+var channelRects = [];
+
+initTimeline();
+
+function initTimeline() {
+	windowResized();
+}
+
+// Resize canvas when we resize the window
+$(window).resize(windowResized);
+
+
+function drawTimeline() {
+	// Create background
+	var rect = new fabric.Rect({
+		left: 0,
+		top: 0,
+		fill: 'grey',
+		width: canvas.width,
+		height: canvas.height,
+		selectable: false
+	});
+	canvas.add(rect);
+
+	// Create channel backgrounds
+	for (let i = 0; i < tData.numChannels; i++) {
+		let c = new fabric.Rect({
+			left: 0,
+			top: getChannelPos(i),
+			width: canvas.width,
+			height: tData.chHeight,
+			fill: 'black',
+			selectable: false
+		});
+		
+		c.on("mousedown", function(options) {
+			
+			let pointer = canvas.getPointer(event.e);
+			
+			let newKeyframe = {
+				"channel": i,
+				"on": timeToCoords(pointer.x),
+				"off": timeToCoords(pointer.x) + 0.5
+			};
+			
+			console.log("adding");
+			
+			showData.push(newKeyframe);
+			windowResized();
+		});
+		
+		
+		channelRects.push(c);
+		canvas.add(channelRects[i]);
+	}
+
+	drawKeyframes();
+
+}
+
+function drawKeyframes() {
+	// Create keyframes
+	for (let i = 0; i < showData.length; i++) {
+
+		let k = new fabric.Rect({
+			left: timeToCoords(showData[i].on),
+			top: getChannelPos(i),
+			width: timeToCoords(showData[i].off - showData[i].on),
+			height: tData.chHeight,
+			fill: 'blue',
+			lockMovementY: true,
+			lockScaleY: true,
+			selectable: false
+		});
+		
+		k.on("mousedown", function(options) {
+			
+			kIndex = selected_keyframes.indexOf(i);
+			
+			if(kIndex === -1){
+				selected_keyframes.push(i);
+				k.set("fill", "yellow");
+			}
+			else {
+				selected_keyframes.splice(kIndex, 1);
+				k.set("fill", "blue");
+			}
+			
+			canvas.renderAll();
+			
+			console.log("Selected keyframes: " + selected_keyframes);
+		});
+		canvas.add(k);
+	}
+}
+
+// HELPER FUNCTIONS
+
+function getChannelPos(ch) {
+	return ch * (tData.chHeight + tData.chWidth);
+}
+
+function timeToCoords(time) {
+
+	let SONG_TIME = 5;
+	let percentage = time / SONG_TIME;
+	return Math.round(percentage * canvas.width);
+}
+
+function windowResized() {
+	fitCanvasToWindow();
+	drawTimeline();
+}
+
+// Fit canvas to window
+function fitCanvasToWindow() {
+	canvas.setDimensions({
+		width: window.innerWidth
+	});
+};
