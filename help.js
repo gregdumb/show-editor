@@ -1,5 +1,9 @@
 var helpData = [
     {
+        title: "Don't Zoom!",
+        content: "Zooming can mess up the editor; make sure your browser zoom is at 100%.",
+        important: true
+    }, {
         title: "Navigation",
         content: "Scroll the mouse wheel to zoom, click & drag the wheel to pan, and click on the timeline to move the time."
     }, {
@@ -14,10 +18,12 @@ var helpData = [
     }
 ];
 
-function createHelpCard(t, c) {
+function createHelpCard(t, c, i) {
+
+    let color = (i == true) ? "red" : "blue-grey";
 
     let newCard = $("<div/>", {
-        class: "card blue-grey darken-1"
+        class: "card small " + color + " darken-1"
     });
 
     let newCardContent = $("<div/>", {
@@ -41,8 +47,9 @@ for (let i = 0; i < helpData.length; i++) {
 
     let title = helpData[i].title;
     let content = helpData[i].content;
+    let important = helpData[i].impoartant;
 
-    let newCard = createHelpCard(title, content);
+    let newCard = createHelpCard(title, content, important);
 
     $("#help-container").append(newCard);
 }
