@@ -21,5 +21,6 @@ function Keyframe(channel, time, state) {
 
 var wavesurfer = WaveSurfer.create({
 	container: "#waveform-container",
-	partialRender: true
+	partialRender: true,
+	audioRate: 1
 });

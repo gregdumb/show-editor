@@ -45,7 +45,7 @@ function mediaPlayPause() {
 	}
 }
 
-wavesurfer.load("./greedy.mp3");
+wavesurfer.load("./WizardsInWinter.mp3");
 
 wavesurfer.on("ready", function() {
 	//wavesurfer.play();
