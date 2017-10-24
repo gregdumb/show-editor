@@ -14,12 +14,6 @@
 		You need to enable JavaScript to run this app.
 	</noscript>
 
-	<!-- REACT-MATERIALIZE -->
-	<!-- Import jQuery before materialize.js -->
-	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
-
 	<div id="app">
 
 		<a class="waves-effect waves-light btn" id="btn-download">Download</a>
@@ -30,9 +24,13 @@
 			</a>
 		</div>
 
-		<div id="help-container">
-			
-		</div>
+		<ul class="collapsible">
+			<li>
+				<div class="collapsible-header"><i class="material-icons">help</i>Get Help</div>
+				<div class="collapsible-body" id="help-container"></div>
+			</li>
+		</ul>
+		<p>Test text</p>
 
 		<div id="waveform-container"></div>
 
@@ -41,6 +39,11 @@
 
 	<!-- SCRIPTS -->
 	<!--script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.7.19/fabric.js"></script-->
+
+	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
+
 	<script src="constants.js"></script>
 	<script src="help.js"></script>
 	<script src="objects.js"></script>
