@@ -29,6 +29,7 @@ Timeline.init = function() {
 	
 	// Time
 	this.time = 0;
+	this.lastFrameTime = 0;
 	this.duration = 10; // in seconds
 	this.timePercent = 0; // Time in 0-1 format
 	this.timeViewPosition = 0; // Time where the left of the view is
@@ -54,6 +55,7 @@ Timeline.init = function() {
 	// Keyframing
 	this.tracks = [];
 	this.selectedKeyframes = [];
+	this.activeTracks = [];
 	
 	// Create canvas
 	this.container = $("#timeline-container");
@@ -337,7 +339,11 @@ Timeline.drawGUI = function() {
 		
 		// Draw label
 		this.ctx.font = "16px arial";
-		this.ctx.fillStyle = this.lineColor;
+		// Temporary: adjust label colors like lights
+		if(this.activeTracks[i]) this.ctx.fillStyle = "white";
+		else this.ctx.fillStyle = "black";
+		
+		//this.ctx.fillStyle = this.lineColor;
 		this.ctx.fillText("Channel " + (i+1), 10, yPos + 16);
 	}
 	
@@ -406,12 +412,40 @@ Timeline.update = function() {
 }
 
 Timeline.updateTime = function() {
+	// If the time has been changed
+	if(this.lastFrameTime != this.time) {
+		this.updateActiveTracks();
+	}
+	this.lastFrameTime = this.time;
+	
 	this.timePercent = this.time / this.duration;
 	
 	// if audio is playing update our position to match
 	if(wavesurfer.isPlaying()) {
 		this.time = wavesurfer.getCurrentTime();
+		//this.updateActiveTracks();
 	}
+	
+	//console.log(this.findClosestKeyframe(this.time, 0, true));
+}
+
+Timeline.updateActiveTracks = function() {
+	
+	if(this.activeTracks.length == 0) {
+		for(let j = 0; j < this.tracks.length; j++) {
+			this.activeTracks.push(0);
+		}
+	}
+	
+	for(let i = 0; i < this.tracks.length; i++) {
+		
+		let lastKeyframe = this.findClosestKeyframe(this.time, i, true);
+		
+		if(lastKeyframe != null) this.activeTracks[i] = lastKeyframe.state;
+		else this.activeTracks[i] = 0;
+	}
+	
+	console.log(this.activeTracks);
 }
 
 // Helper functions
@@ -472,18 +506,37 @@ Timeline.buildKeyframes = function() {
 	for(let i = 0; i < this.numTracks; i++){
 		
 		// Build frames
-		var k = [new Keyframe(i, 1.5, 1)];
+		//var k = [new Keyframe(i, 1.5, 1)];
+		var keys = [];
+		
+		for(let j = 1; j < 100; j++) {
+			keys.push(new Keyframe(i, 120 * Math.random(), Math.round(Math.random())));
+		}
 		
 		// Build track
-		var t = new Track(i, k);
+		var t = new Track(i, keys);
 		
 		this.tracks.push(t);
 	}
 	
-	console.log(this.tracks);
+	this.sortKeyframes();
+	
+	this.updateActiveTracks();
+	
+	//console.log(this.tracks);
 }
 
-Timeline.findClosestKeyframe = function(time, trackIndex) {
+Timeline.sortKeyframes = function() {
+	
+	for(let i = 0; i < this.tracks.length; i++) {
+		
+		this.tracks[i].keyframes.sort(function(a, b) {
+			return a.time - b.time;
+		});
+	}
+}
+
+Timeline.findClosestKeyframe = function(time, trackIndex, onlyBefore = false) {
 	var t = this.tracks[trackIndex];
 	var current = null;
 	for (let i = 0; i < t.keyframes.length; i++) {
@@ -497,9 +550,13 @@ Timeline.findClosestKeyframe = function(time, trackIndex) {
 			let newdiff = Math.abs(k.time - time);
 			let olddiff = Math.abs(current.time - time);
 			
-			if(newdiff < olddiff) current = k;
+			if(onlyBefore && k.time > this.time) continue;
+			if((newdiff < olddiff)) current = k;
 		}
 	}
+	
+	// Just make sure that we aren't going to return a keyframe after
+	if(onlyBefore && this.time < current.time) current = null;
 	
 	return current;
 }

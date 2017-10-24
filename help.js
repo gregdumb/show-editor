@@ -20,10 +20,12 @@ var helpData = [
 
 function createHelpCard(t, c, i) {
 
-    let color = (i == true) ? "red" : "blue-grey";
-
+	let color = (i == true) ? "red" : "blue-grey";
+	
+	console.log(color);
+	
     let newCard = $("<div/>", {
-        class: "card small " + color + " darken-1"
+        class: "card " + color + " darken-1"
     });
 
     let newCardContent = $("<div/>", {
@@ -47,7 +49,7 @@ for (let i = 0; i < helpData.length; i++) {
 
     let title = helpData[i].title;
     let content = helpData[i].content;
-    let important = helpData[i].impoartant;
+    let important = helpData[i].important;
 
     let newCard = createHelpCard(title, content, important);
 
