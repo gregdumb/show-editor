@@ -14,7 +14,7 @@ var helpData = [
         content: "Use RMB to add a new keyframe."
     }, {
         title: "Manipulating Keyframes",
-        content: "Hold G to grab & drag keyframes, use I to invert values, use A to align accross channels"
+        content: "Press G grab & drag keyframes, then LMB to place or RMB to cancel. Use I to invert values, use A to align accross channels"
     }
 ];
 

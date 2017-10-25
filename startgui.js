@@ -20,8 +20,11 @@ $("#btn-download").on("click", function() {
 });
 
 $("#btn-play").on("click", function() {
-	
 	mediaPlayPause();
+});
+
+$("#btn-stop").on("click", function() {
+	mediaStop();
 });
 
 document.addEventListener("keydown", function(e) {
@@ -43,6 +46,12 @@ function mediaPlayPause() {
 	else {
 		$("#icon-play").html("play_arrow");
 	}
+}
+
+function mediaStop() {
+	wavesurfer.stop();
+	Timeline.time = 0;
+	$("#icon-play").html("play_arrow");
 }
 
 wavesurfer.load("./WizardsInWinter.mp3");

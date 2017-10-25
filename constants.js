@@ -5,6 +5,7 @@ const KEY_CTRL = 17;
 const KEY_SPACE = 32;
 
 const KEY_A = 65;
+const KEY_D = 68;
 const KEY_G = 71;
 const KEY_I = 73;
 

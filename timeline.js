@@ -74,7 +74,8 @@ Timeline.init = function() {
 	this.canvas.addEventListener("click", this.mouseClicked);
 	this.canvas.addEventListener("mousemove", this.mouseMoved);
 	this.canvas.addEventListener("mouseup", this.mouseUp);
-	this.canvas.addEventListener("mouseout", this.mouseUp);
+	document.addEventListener("mouseup", this.mouseUp);
+	//this.canvas.addEventListener("mouseout", this.mouseUp);
 	this.canvas.addEventListener("wheel", this.mouseWheel);
 	document.addEventListener("keydown", this.keyDown);
 	document.addEventListener("keyup", this.keyUp);
@@ -88,6 +89,19 @@ Timeline.mouseDown = function(e) {
 	
 	var clicked = e.which;
 	var rightClick = (e.which === 3);
+	
+	// @TODO Make this better
+	// We don't want to be able to click while dragging
+	if(t.state.draggingKeyframes) {
+		if(clicked == LEFTCLICK) {
+			t.stopDraggingKeyframes();
+		}
+		else if(clicked == RIGHTCLICK) {
+			t.cancelDraggingKeyframes();
+		}
+		
+		return; // Don't do anything else, just place the keyframes
+	}
 	
 	// Time bar clicked
 	if(x > t.sideBarWidth && y < t.timeBarHeight) {
@@ -256,8 +270,13 @@ Timeline.keyDown = function(e) {
 		Timeline.performAlign();
 	}
 	
+	if(key == KEY_D) {
+		Timeline.duplicateKeyframes();
+	}
+	
 	if(key == KEY_G) {
-		Timeline.state.draggingKeyframes = true;
+		//Timeline.state.draggingKeyframes = true;
+		Timeline.startDraggingKeyframes();
 	}
 	
 	if(key == KEY_I) {
@@ -277,11 +296,7 @@ Timeline.keyUp = function(e) {
 	var key = e.keyCode;
 	
 	if(key == KEY_G) {
-		Timeline.keyframeDragStartX = -1;
-		Timeline.state.draggingKeyframes = false;
-		for(let i = 0; i < Timeline.selectedKeyframes.length; i++) {
-			Timeline.selectedKeyframes[i].oldTime = Timeline.selectedKeyframes[i].time;
-		}
+		//Timeline.stopDraggingKeyframes();
 	}
 	
 	if(key == KEY_SHIFT) {
@@ -503,7 +518,7 @@ Timeline.getSelectionTolerance = function() {
 // FOR DEBUGGING ONLY
 Timeline.buildKeyframes = function() {
 	
-	for(let i = 0; i < this.numTracks; i++){
+	/*for(let i = 0; i < this.numTracks; i++){
 		
 		// Build frames
 		//var k = [new Keyframe(i, 1.5, 1)];
@@ -517,15 +532,23 @@ Timeline.buildKeyframes = function() {
 		var t = new Track(i, keys);
 		
 		this.tracks.push(t);
-	}
+	}*/
 	
-	 this.tracks = [{"id":0,"keyframes":[{"channel":0,"time":0.37333333333333335,"oldTime":0.37333333333333335,"state":true,"selected":false},{"channel":0,"time":0.99,"oldTime":1.1125,"state":0,"selected":false},{"channel":0,"time":1.16,"oldTime":1.2825,"state":true,"selected":false},{"channel":0,"time":1.76,"oldTime":1.76,"state":0,"selected":false},{"channel":0,"time":1.95,"oldTime":1.95,"state":true,"selected":false},{"channel":0,"time":2.545,"oldTime":2.545,"state":0,"selected":false},{"channel":0,"time":2.7575000000000003,"oldTime":2.7975000000000003,"state":true,"selected":false},{"channel":0,"time":3.341875,"oldTime":3.341875,"state":0,"selected":false},{"channel":0,"time":3.5650000000000004,"oldTime":3.5650000000000004,"state":true,"selected":false},{"channel":0,"time":4.139669117647059,"oldTime":4.139669117647059,"state":0,"selected":false},{"channel":0,"time":4.391544117647059,"oldTime":4.391544117647059,"state":true,"selected":false},{"channel":0,"time":4.962704831932773,"oldTime":4.962704831932773,"state":true,"selected":false},{"channel":0,"time":5.168329831932772,"oldTime":5.168329831932772,"state":true,"selected":false},{"channel":0,"time":4.9029131652661055,"oldTime":4.825413165266106,"state":0,"selected":false},{"channel":0,"time":5.068329831932773,"oldTime":5.068329831932773,"state":0,"selected":false},{"channel":0,"time":6.019579831932773,"oldTime":6.019579831932773,"state":true,"selected":false},{"channel":0,"time":5.267079831932773,"oldTime":5.267079831932773,"state":0,"selected":false},{"channel":0,"time":6.232079831932773,"oldTime":6.232079831932773,"state":0,"selected":false}]},{"id":1,"keyframes":[{"channel":1,"time":0.37333333333333335,"oldTime":0.37333333333333335,"state":true,"selected":false},{"channel":1,"time":0.99,"oldTime":1.1125,"state":0,"selected":false},{"channel":1,"time":1.16,"oldTime":1.2825,"state":true,"selected":false},{"channel":1,"time":1.76,"oldTime":1.76,"state":0,"selected":false},{"channel":1,"time":1.95,"oldTime":1.95,"state":true,"selected":false},{"channel":1,"time":2.545,"oldTime":2.545,"state":0,"selected":false},{"channel":1,"time":2.7575000000000003,"oldTime":2.7975000000000003,"state":true,"selected":false},{"channel":1,"time":3.341875,"oldTime":3.341875,"state":0,"selected":false},{"channel":1,"time":3.5650000000000004,"oldTime":3.5650000000000004,"state":true,"selected":false},{"channel":1,"time":4.139669117647059,"oldTime":4.139669117647059,"state":0,"selected":false},{"channel":1,"time":4.391544117647059,"oldTime":4.391544117647059,"state":true,"selected":false},{"channel":1,"time":4.962704831932773,"oldTime":4.962704831932773,"state":true,"selected":false},{"channel":1,"time":5.168329831932772,"oldTime":5.168329831932772,"state":true,"selected":false},{"channel":1,"time":4.9029131652661055,"oldTime":4.825413165266106,"state":0,"selected":false},{"channel":1,"time":5.068329831932773,"oldTime":5.068329831932773,"state":0,"selected":false},{"channel":1,"time":5.7745798319327735,"oldTime":6.597079831932773,"state":true,"selected":false},{"channel":1,"time":5.267079831932773,"oldTime":5.267079831932773,"state":0,"selected":false},{"channel":1,"time":6.432079831932772,"oldTime":6.432079831932772,"state":0,"selected":false}]},{"id":2,"keyframes":[{"channel":2,"time":0.37333333333333335,"oldTime":0.37333333333333335,"state":true,"selected":false},{"channel":2,"time":0.99,"oldTime":1.1125,"state":0,"selected":false},{"channel":2,"time":1.16,"oldTime":1.2825,"state":true,"selected":false},{"channel":2,"time":1.76,"oldTime":1.76,"state":0,"selected":false},{"channel":2,"time":1.95,"oldTime":1.95,"state":true,"selected":false},{"channel":2,"time":2.545,"oldTime":2.545,"state":0,"selected":false},{"channel":2,"time":2.7575000000000003,"oldTime":2.7975000000000003,"state":true,"selected":false},{"channel":2,"time":3.341875,"oldTime":3.341875,"state":0,"selected":false},{"channel":2,"time":3.5650000000000004,"oldTime":3.5650000000000004,"state":true,"selected":false},{"channel":2,"time":4.139669117647059,"oldTime":4.139669117647059,"state":0,"selected":false},{"channel":2,"time":4.391544117647059,"oldTime":4.391544117647059,"state":true,"selected":false},{"channel":2,"time":4.962704831932773,"oldTime":4.962704831932773,"state":true,"selected":false},{"channel":2,"time":5.168329831932772,"oldTime":5.168329831932772,"state":true,"selected":false},{"channel":2,"time":4.9029131652661055,"oldTime":4.825413165266106,"state":0,"selected":false},{"channel":2,"time":5.068329831932773,"oldTime":5.068329831932773,"state":0,"selected":false},{"channel":2,"time":5.552079831932773,"oldTime":5.552079831932773,"state":true,"selected":false},{"channel":2,"time":5.267079831932773,"oldTime":5.267079831932773,"state":0,"selected":false},{"channel":2,"time":6.628329831932772,"oldTime":6.628329831932772,"state":0,"selected":false}]},{"id":3,"keyframes":[{"channel":3,"time":0.99,"oldTime":1.1125,"state":true,"selected":false},{"channel":3,"time":0.99,"oldTime":1.1125,"state":0,"selected":false},{"channel":3,"time":1.76,"oldTime":1.76,"state":true,"selected":false},{"channel":3,"time":1.95,"oldTime":1.95,"state":0,"selected":false},{"channel":3,"time":1.1675,"oldTime":1.29,"state":0,"selected":false},{"channel":3,"time":2.545,"oldTime":2.545,"state":true,"selected":false},{"channel":3,"time":2.7575000000000003,"oldTime":2.7975000000000003,"state":0,"selected":false},{"channel":3,"time":3.341875,"oldTime":3.341875,"state":true,"selected":false},{"channel":3,"time":3.5650000000000004,"oldTime":3.5650000000000004,"state":0,"selected":false},{"channel":3,"time":4.139669117647059,"oldTime":4.139669117647059,"state":true,"selected":false},{"channel":3,"time":4.391544117647059,"oldTime":4.391544117647059,"state":0,"selected":false},{"channel":3,"time":4.962704831932773,"oldTime":4.962704831932773,"state":true,"selected":false},{"channel":3,"time":5.168329831932772,"oldTime":5.168329831932772,"state":true,"selected":false},{"channel":3,"time":5.068329831932773,"oldTime":5.068329831932773,"state":0,"selected":false},{"channel":3,"time":5.362079831932773,"oldTime":5.362079831932773,"state":true,"selected":false},{"channel":3,"time":5.267079831932773,"oldTime":5.267079831932773,"state":0,"selected":false},{"channel":3,"time":6.628329831932772,"oldTime":6.628329831932772,"state":0,"selected":false}]}];
+	//this.tracks = [{"id":0,"keyframes":[{"channel":0,"time":0.37333333333333335,"oldTime":0.37333333333333335,"state":true,"selected":false},{"channel":0,"time":0.99,"oldTime":0.99,"state":0,"selected":false},{"channel":0,"time":1.16,"oldTime":1.16,"state":true,"selected":false},{"channel":0,"time":1.76,"oldTime":1.76,"state":0,"selected":false},{"channel":0,"time":1.95,"oldTime":1.95,"state":true,"selected":false},{"channel":0,"time":2.545,"oldTime":2.545,"state":0,"selected":false},{"channel":0,"time":2.7575000000000003,"oldTime":2.7575000000000003,"state":true,"selected":false},{"channel":0,"time":3.341875,"oldTime":3.341875,"state":0,"selected":false},{"channel":0,"time":3.5650000000000004,"oldTime":3.5650000000000004,"state":true,"selected":false},{"channel":0,"time":4.139669117647059,"oldTime":4.139669117647059,"state":0,"selected":false},{"channel":0,"time":4.391544117647059,"oldTime":4.391544117647059,"state":true,"selected":false},{"channel":0,"time":4.9029131652661055,"oldTime":4.9029131652661055,"state":0,"selected":false},{"channel":0,"time":4.962704831932773,"oldTime":4.962704831932773,"state":true,"selected":false},{"channel":0,"time":5.068329831932773,"oldTime":5.068329831932773,"state":0,"selected":false},{"channel":0,"time":5.168329831932772,"oldTime":5.168329831932772,"state":true,"selected":false},{"channel":0,"time":5.267079831932773,"oldTime":5.267079831932773,"state":0,"selected":false},{"channel":0,"time":6.019579831932773,"oldTime":6.019579831932773,"state":true,"selected":false},{"channel":0,"time":6.232079831932773,"oldTime":6.232079831932773,"state":0,"selected":false}]},{"id":1,"keyframes":[{"channel":1,"time":0.37333333333333335,"oldTime":0.37333333333333335,"state":true,"selected":false},{"channel":1,"time":0.99,"oldTime":0.99,"state":0,"selected":false},{"channel":1,"time":1.16,"oldTime":1.16,"state":true,"selected":false},{"channel":1,"time":1.76,"oldTime":1.76,"state":0,"selected":false},{"channel":1,"time":1.95,"oldTime":1.95,"state":true,"selected":false},{"channel":1,"time":2.545,"oldTime":2.545,"state":0,"selected":false},{"channel":1,"time":2.7575000000000003,"oldTime":2.7575000000000003,"state":true,"selected":false},{"channel":1,"time":3.341875,"oldTime":3.341875,"state":0,"selected":false},{"channel":1,"time":3.5650000000000004,"oldTime":3.5650000000000004,"state":true,"selected":false},{"channel":1,"time":4.139669117647059,"oldTime":4.139669117647059,"state":0,"selected":false},{"channel":1,"time":4.391544117647059,"oldTime":4.391544117647059,"state":true,"selected":false},{"channel":1,"time":4.9029131652661055,"oldTime":4.9029131652661055,"state":0,"selected":false},{"channel":1,"time":4.962704831932773,"oldTime":4.962704831932773,"state":true,"selected":false},{"channel":1,"time":5.068329831932773,"oldTime":5.068329831932773,"state":0,"selected":false},{"channel":1,"time":5.168329831932772,"oldTime":5.168329831932772,"state":true,"selected":false},{"channel":1,"time":5.267079831932773,"oldTime":5.267079831932773,"state":0,"selected":false},{"channel":1,"time":5.7745798319327735,"oldTime":5.7745798319327735,"state":true,"selected":false},{"channel":1,"time":6.432079831932772,"oldTime":6.432079831932772,"state":0,"selected":false}]},{"id":2,"keyframes":[{"channel":2,"time":0.37333333333333335,"oldTime":0.37333333333333335,"state":true,"selected":false},{"channel":2,"time":0.99,"oldTime":0.99,"state":0,"selected":false},{"channel":2,"time":1.16,"oldTime":1.16,"state":true,"selected":false},{"channel":2,"time":1.76,"oldTime":1.76,"state":0,"selected":false},{"channel":2,"time":1.95,"oldTime":1.95,"state":true,"selected":false},{"channel":2,"time":2.545,"oldTime":2.545,"state":0,"selected":false},{"channel":2,"time":2.7575000000000003,"oldTime":2.7575000000000003,"state":true,"selected":false},{"channel":2,"time":3.341875,"oldTime":3.341875,"state":0,"selected":false},{"channel":2,"time":3.5650000000000004,"oldTime":3.5650000000000004,"state":true,"selected":false},{"channel":2,"time":4.139669117647059,"oldTime":4.139669117647059,"state":0,"selected":false},{"channel":2,"time":4.391544117647059,"oldTime":4.391544117647059,"state":true,"selected":false},{"channel":2,"time":4.9029131652661055,"oldTime":4.9029131652661055,"state":0,"selected":false},{"channel":2,"time":4.962704831932773,"oldTime":4.962704831932773,"state":true,"selected":false},{"channel":2,"time":5.068329831932773,"oldTime":5.068329831932773,"state":0,"selected":false},{"channel":2,"time":5.168329831932772,"oldTime":5.168329831932772,"state":true,"selected":false},{"channel":2,"time":5.267079831932773,"oldTime":5.267079831932773,"state":0,"selected":false},{"channel":2,"time":5.552079831932773,"oldTime":5.552079831932773,"state":true,"selected":false},{"channel":2,"time":6.628329831932772,"oldTime":6.628329831932772,"state":0,"selected":false}]},{"id":3,"keyframes":[{"channel":3,"time":0.99,"oldTime":0.99,"state":true,"selected":false},{"channel":3,"time":0.99,"oldTime":0.99,"state":0,"selected":false},{"channel":3,"time":1.1675,"oldTime":1.1675,"state":0,"selected":false},{"channel":3,"time":1.76,"oldTime":1.76,"state":true,"selected":false},{"channel":3,"time":1.95,"oldTime":1.95,"state":0,"selected":false},{"channel":3,"time":2.545,"oldTime":2.545,"state":true,"selected":false},{"channel":3,"time":2.7575000000000003,"oldTime":2.7575000000000003,"state":0,"selected":false},{"channel":3,"time":3.341875,"oldTime":3.341875,"state":true,"selected":false},{"channel":3,"time":3.5650000000000004,"oldTime":3.5650000000000004,"state":0,"selected":false},{"channel":3,"time":4.139669117647059,"oldTime":4.139669117647059,"state":true,"selected":false},{"channel":3,"time":4.391544117647059,"oldTime":4.391544117647059,"state":0,"selected":false},{"channel":3,"time":4.962704831932773,"oldTime":4.962704831932773,"state":true,"selected":false},{"channel":3,"time":5.068329831932773,"oldTime":5.068329831932773,"state":0,"selected":false},{"channel":3,"time":5.168329831932772,"oldTime":5.168329831932772,"state":true,"selected":false},{"channel":3,"time":5.267079831932773,"oldTime":5.267079831932773,"state":0,"selected":false},{"channel":3,"time":5.362079831932773,"oldTime":5.362079831932773,"state":true,"selected":false},{"channel":3,"time":6.628329831932772,"oldTime":6.628329831932772,"state":0,"selected":false}]}];
+	this.tracks = [{"id":0,"keyframes":[{"channel":0,"time":0.37333333333333335,"oldTime":0.37333333333333335,"state":true,"selected":false},{"channel":0,"time":0.44499999999999995,"oldTime":0.44499999999999995,"state":0,"selected":false},{"channel":0,"time":0.5233333333333333,"oldTime":0.5233333333333333,"state":true,"selected":false},{"channel":0,"time":0.6,"oldTime":0.6,"state":0,"selected":false},{"channel":0,"time":0.6733333333333333,"oldTime":0.6733333333333333,"state":true,"selected":false},{"channel":0,"time":0.99,"oldTime":0.99,"state":0,"selected":false},{"channel":0,"time":1.16,"oldTime":1.16,"state":true,"selected":false},{"channel":0,"time":1.24,"oldTime":1.24,"state":0,"selected":false},{"channel":0,"time":1.3183333333333334,"oldTime":1.3183333333333334,"state":true,"selected":false},{"channel":0,"time":1.395,"oldTime":1.395,"state":0,"selected":false},{"channel":0,"time":1.4683333333333333,"oldTime":1.4683333333333333,"state":true,"selected":false},{"channel":0,"time":1.76,"oldTime":1.76,"state":0,"selected":false},{"channel":0,"time":1.95,"oldTime":1.95,"state":true,"selected":false},{"channel":0,"time":2.035,"oldTime":2.035,"state":0,"selected":false},{"channel":0,"time":2.1133333333333333,"oldTime":2.1133333333333333,"state":true,"selected":false},{"channel":0,"time":2.19,"oldTime":2.19,"state":0,"selected":false},{"channel":0,"time":2.263333333333333,"oldTime":2.263333333333333,"state":true,"selected":false},{"channel":0,"time":2.545,"oldTime":2.545,"state":0,"selected":false},{"channel":0,"time":2.7575000000000003,"oldTime":2.7575000000000003,"state":true,"selected":false},{"channel":0,"time":2.8325,"oldTime":2.8325,"state":0,"selected":false},{"channel":0,"time":2.910833333333333,"oldTime":2.910833333333333,"state":true,"selected":false},{"channel":0,"time":2.9875,"oldTime":2.9875,"state":0,"selected":false},{"channel":0,"time":3.060833333333333,"oldTime":3.060833333333333,"state":true,"selected":false},{"channel":0,"time":3.341875,"oldTime":3.341875,"state":0,"selected":false},{"channel":0,"time":3.5650000000000004,"oldTime":3.5650000000000004,"state":true,"selected":false},{"channel":0,"time":3.65,"oldTime":3.65,"state":0,"selected":false},{"channel":0,"time":3.728333333333333,"oldTime":3.728333333333333,"state":true,"selected":false},{"channel":0,"time":3.8049999999999997,"oldTime":3.8049999999999997,"state":0,"selected":false},{"channel":0,"time":3.878333333333333,"oldTime":3.878333333333333,"state":true,"selected":false},{"channel":0,"time":4.139669117647059,"oldTime":4.139669117647059,"state":0,"selected":false},{"channel":0,"time":4.391544117647059,"oldTime":4.391544117647059,"state":true,"selected":false},{"channel":0,"time":4.465,"oldTime":4.465,"state":0,"selected":false},{"channel":0,"time":4.543333333333333,"oldTime":4.543333333333333,"state":true,"selected":false},{"channel":0,"time":4.62,"oldTime":4.62,"state":0,"selected":false},{"channel":0,"time":4.693333333333333,"oldTime":4.693333333333333,"state":true,"selected":false},{"channel":0,"time":4.9029131652661055,"oldTime":4.9029131652661055,"state":0,"selected":false},{"channel":0,"time":4.962704831932773,"oldTime":4.962704831932773,"state":true,"selected":false},{"channel":0,"time":5.068329831932773,"oldTime":5.068329831932773,"state":0,"selected":false},{"channel":0,"time":5.168329831932772,"oldTime":5.168329831932772,"state":true,"selected":false},{"channel":0,"time":5.267079831932773,"oldTime":5.267079831932773,"state":0,"selected":false},{"channel":0,"time":6.019579831932773,"oldTime":6.019579831932773,"state":true,"selected":false},{"channel":0,"time":6.232079831932773,"oldTime":6.232079831932773,"state":0,"selected":false}]},{"id":1,"keyframes":[{"channel":1,"time":0.37333333333333335,"oldTime":0.37333333333333335,"state":true,"selected":false},{"channel":1,"time":0.44499999999999995,"oldTime":0.44499999999999995,"state":0,"selected":false},{"channel":1,"time":0.5233333333333333,"oldTime":0.5233333333333333,"state":true,"selected":false},{"channel":1,"time":0.6,"oldTime":0.6,"state":0,"selected":false},{"channel":1,"time":0.6733333333333333,"oldTime":0.6733333333333333,"state":true,"selected":false},{"channel":1,"time":0.99,"oldTime":0.99,"state":0,"selected":false},{"channel":1,"time":1.16,"oldTime":1.16,"state":true,"selected":false},{"channel":1,"time":1.24,"oldTime":1.24,"state":0,"selected":false},{"channel":1,"time":1.3183333333333334,"oldTime":1.3183333333333334,"state":true,"selected":false},{"channel":1,"time":1.395,"oldTime":1.395,"state":0,"selected":false},{"channel":1,"time":1.4683333333333333,"oldTime":1.4683333333333333,"state":true,"selected":false},{"channel":1,"time":1.76,"oldTime":1.76,"state":0,"selected":false},{"channel":1,"time":1.95,"oldTime":1.95,"state":true,"selected":false},{"channel":1,"time":2.035,"oldTime":2.035,"state":0,"selected":false},{"channel":1,"time":2.1133333333333333,"oldTime":2.1133333333333333,"state":true,"selected":false},{"channel":1,"time":2.19,"oldTime":2.19,"state":0,"selected":false},{"channel":1,"time":2.263333333333333,"oldTime":2.263333333333333,"state":true,"selected":false},{"channel":1,"time":2.545,"oldTime":2.545,"state":0,"selected":false},{"channel":1,"time":2.7575000000000003,"oldTime":2.7575000000000003,"state":true,"selected":false},{"channel":1,"time":2.8325,"oldTime":2.8325,"state":0,"selected":false},{"channel":1,"time":2.910833333333333,"oldTime":2.910833333333333,"state":true,"selected":false},{"channel":1,"time":2.9875,"oldTime":2.9875,"state":0,"selected":false},{"channel":1,"time":3.060833333333333,"oldTime":3.060833333333333,"state":true,"selected":false},{"channel":1,"time":3.341875,"oldTime":3.341875,"state":0,"selected":false},{"channel":1,"time":3.5650000000000004,"oldTime":3.5650000000000004,"state":true,"selected":false},{"channel":1,"time":3.65,"oldTime":3.65,"state":0,"selected":false},{"channel":1,"time":3.728333333333333,"oldTime":3.728333333333333,"state":true,"selected":false},{"channel":1,"time":3.8049999999999997,"oldTime":3.8049999999999997,"state":0,"selected":false},{"channel":1,"time":3.878333333333333,"oldTime":3.878333333333333,"state":true,"selected":false},{"channel":1,"time":4.139669117647059,"oldTime":4.139669117647059,"state":0,"selected":false},{"channel":1,"time":4.391544117647059,"oldTime":4.391544117647059,"state":true,"selected":false},{"channel":1,"time":4.465,"oldTime":4.465,"state":0,"selected":false},{"channel":1,"time":4.543333333333333,"oldTime":4.543333333333333,"state":true,"selected":false},{"channel":1,"time":4.62,"oldTime":4.62,"state":0,"selected":false},{"channel":1,"time":4.693333333333333,"oldTime":4.693333333333333,"state":true,"selected":false},{"channel":1,"time":4.9029131652661055,"oldTime":4.9029131652661055,"state":0,"selected":false},{"channel":1,"time":4.962704831932773,"oldTime":4.962704831932773,"state":true,"selected":false},{"channel":1,"time":5.068329831932773,"oldTime":5.068329831932773,"state":0,"selected":false},{"channel":1,"time":5.168329831932772,"oldTime":5.168329831932772,"state":true,"selected":false},{"channel":1,"time":5.267079831932773,"oldTime":5.267079831932773,"state":0,"selected":false},{"channel":1,"time":5.7745798319327735,"oldTime":5.7745798319327735,"state":true,"selected":false},{"channel":1,"time":6.432079831932772,"oldTime":6.432079831932772,"state":0,"selected":false}]},{"id":2,"keyframes":[{"channel":2,"time":0.37333333333333335,"oldTime":0.37333333333333335,"state":true,"selected":false},{"channel":2,"time":0.44499999999999995,"oldTime":0.44499999999999995,"state":0,"selected":false},{"channel":2,"time":0.5233333333333333,"oldTime":0.5233333333333333,"state":true,"selected":false},{"channel":2,"time":0.6,"oldTime":0.6,"state":0,"selected":false},{"channel":2,"time":0.6733333333333333,"oldTime":0.6733333333333333,"state":true,"selected":false},{"channel":2,"time":0.99,"oldTime":0.99,"state":0,"selected":false},{"channel":2,"time":1.16,"oldTime":1.16,"state":true,"selected":false},{"channel":2,"time":1.24,"oldTime":1.24,"state":0,"selected":false},{"channel":2,"time":1.3183333333333334,"oldTime":1.3183333333333334,"state":true,"selected":false},{"channel":2,"time":1.395,"oldTime":1.395,"state":0,"selected":false},{"channel":2,"time":1.4683333333333333,"oldTime":1.4683333333333333,"state":true,"selected":false},{"channel":2,"time":1.76,"oldTime":1.76,"state":0,"selected":false},{"channel":2,"time":1.95,"oldTime":1.95,"state":true,"selected":false},{"channel":2,"time":2.035,"oldTime":2.035,"state":0,"selected":false},{"channel":2,"time":2.1133333333333333,"oldTime":2.1133333333333333,"state":true,"selected":false},{"channel":2,"time":2.19,"oldTime":2.19,"state":0,"selected":false},{"channel":2,"time":2.263333333333333,"oldTime":2.263333333333333,"state":true,"selected":false},{"channel":2,"time":2.545,"oldTime":2.545,"state":0,"selected":false},{"channel":2,"time":2.7575000000000003,"oldTime":2.7575000000000003,"state":true,"selected":false},{"channel":2,"time":2.8325,"oldTime":2.8325,"state":0,"selected":false},{"channel":2,"time":2.910833333333333,"oldTime":2.910833333333333,"state":true,"selected":false},{"channel":2,"time":2.9875,"oldTime":2.9875,"state":0,"selected":false},{"channel":2,"time":3.060833333333333,"oldTime":3.060833333333333,"state":true,"selected":false},{"channel":2,"time":3.341875,"oldTime":3.341875,"state":0,"selected":false},{"channel":2,"time":3.5650000000000004,"oldTime":3.5650000000000004,"state":true,"selected":false},{"channel":2,"time":3.65,"oldTime":3.65,"state":0,"selected":false},{"channel":2,"time":3.728333333333333,"oldTime":3.728333333333333,"state":true,"selected":false},{"channel":2,"time":3.8049999999999997,"oldTime":3.8049999999999997,"state":0,"selected":false},{"channel":2,"time":3.878333333333333,"oldTime":3.878333333333333,"state":true,"selected":false},{"channel":2,"time":4.139669117647059,"oldTime":4.139669117647059,"state":0,"selected":false},{"channel":2,"time":4.391544117647059,"oldTime":4.391544117647059,"state":true,"selected":false},{"channel":2,"time":4.465,"oldTime":4.465,"state":0,"selected":false},{"channel":2,"time":4.543333333333333,"oldTime":4.543333333333333,"state":true,"selected":false},{"channel":2,"time":4.62,"oldTime":4.62,"state":0,"selected":false},{"channel":2,"time":4.693333333333333,"oldTime":4.693333333333333,"state":true,"selected":false},{"channel":2,"time":4.9029131652661055,"oldTime":4.9029131652661055,"state":0,"selected":false},{"channel":2,"time":4.962704831932773,"oldTime":4.962704831932773,"state":true,"selected":false},{"channel":2,"time":5.068329831932773,"oldTime":5.068329831932773,"state":0,"selected":false},{"channel":2,"time":5.168329831932772,"oldTime":5.168329831932772,"state":true,"selected":false},{"channel":2,"time":5.267079831932773,"oldTime":5.267079831932773,"state":0,"selected":false},{"channel":2,"time":5.552079831932773,"oldTime":5.552079831932773,"state":true,"selected":false},{"channel":2,"time":6.628329831932772,"oldTime":6.628329831932772,"state":0,"selected":false}]},{"id":3,"keyframes":[{"channel":3,"time":0.99,"oldTime":0.99,"state":true,"selected":false},{"channel":3,"time":0.99,"oldTime":0.99,"state":0,"selected":false},{"channel":3,"time":1.1675,"oldTime":1.1675,"state":0,"selected":false},{"channel":3,"time":1.76,"oldTime":1.76,"state":true,"selected":false},{"channel":3,"time":1.95,"oldTime":1.95,"state":0,"selected":false},{"channel":3,"time":2.545,"oldTime":2.545,"state":true,"selected":false},{"channel":3,"time":2.7575000000000003,"oldTime":2.7575000000000003,"state":0,"selected":false},{"channel":3,"time":3.341875,"oldTime":3.341875,"state":true,"selected":false},{"channel":3,"time":3.5650000000000004,"oldTime":3.5650000000000004,"state":0,"selected":false},{"channel":3,"time":4.139669117647059,"oldTime":4.139669117647059,"state":true,"selected":false},{"channel":3,"time":4.391544117647059,"oldTime":4.391544117647059,"state":0,"selected":false},{"channel":3,"time":4.962704831932773,"oldTime":4.962704831932773,"state":true,"selected":false},{"channel":3,"time":5.068329831932773,"oldTime":5.068329831932773,"state":0,"selected":false},{"channel":3,"time":5.168329831932772,"oldTime":5.168329831932772,"state":true,"selected":false},{"channel":3,"time":5.267079831932773,"oldTime":5.267079831932773,"state":0,"selected":false},{"channel":3,"time":5.362079831932773,"oldTime":5.362079831932773,"state":true,"selected":false},{"channel":3,"time":6.628329831932772,"oldTime":6.628329831932772,"state":0,"selected":false}]}];
+	
+	// Fix any errors with time and oldtime
+	/*for(let i = 0; i < this.tracks.length; i++) {
+		let t = this.tracks[i];
+		for(let j = 0; j < t.keyframes.length; j++) {
+			let k = t.keyframes[j];
+			k.oldTime = k.time;
+		}
+	}*/
 	
 	this.sortKeyframes();
 	
 	this.updateActiveTracks();
-	
-	//console.log(this.tracks);
 }
 
 Timeline.sortKeyframes = function() {
@@ -561,6 +584,27 @@ Timeline.findClosestKeyframe = function(time, trackIndex, onlyBefore = false) {
 	if(onlyBefore && (current != null) && this.time < current.time) current = null;
 	
 	return current;
+}
+
+Timeline.startDraggingKeyframes = function() {
+	Timeline.state.draggingKeyframes = true;
+}
+
+Timeline.stopDraggingKeyframes = function() {
+	Timeline.keyframeDragStartX = -1;
+	Timeline.state.draggingKeyframes = false;
+	for(let i = 0; i < Timeline.selectedKeyframes.length; i++) {
+		Timeline.selectedKeyframes[i].oldTime = Timeline.selectedKeyframes[i].time;
+	}
+	Timeline.sortKeyframes();
+}
+
+Timeline.cancelDraggingKeyframes = function() {
+	Timeline.keyframeDragStartX = -1;
+	Timeline.state.draggingKeyframes = false;
+	for(let i = 0; i < Timeline.selectedKeyframes.length; i++) {
+		Timeline.selectedKeyframes[i].time = Timeline.selectedKeyframes[i].oldTime;
+	}
 }
 
 Timeline.getTimeMarkerSpacing = function() {
@@ -607,6 +651,28 @@ Timeline.deleteSelectedKeyframes = function() {
 			t.keyframes.splice(toRemove[k], 1);
 		}
 	}
+}
+
+Timeline.duplicateKeyframes = function() {
+	
+	//var newKeyframes = this.getSelectedKeyframes().slice(0); //this.selectedKeyframes.slice(0);
+	
+	var newKeyframes = JSON.parse(JSON.stringify(this.selectedKeyframes));
+	
+	this.deselectAllKeyframes();
+	
+	for(let i = 0; i < newKeyframes.length; i++) {
+		
+		let k = newKeyframes[i];
+		let t = k.channel;
+		
+		console.log("NEWKEYFRAME", k);
+		
+		k.selected = true;
+		this.tracks[t].keyframes.push(k);
+	}
+	
+	this.startDraggingKeyframes();
 }
 
 Timeline.deselectAllKeyframes = function() {
