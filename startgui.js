@@ -72,6 +72,7 @@ wavesurfer.load("./WizardsInWinter.mp3");
 
 wavesurfer.on("ready", function() {
 	//wavesurfer.play();
+	wavesurfer.zoom(Timeline.timeScale);
 	Timeline.duration = wavesurfer.getDuration();
 	console.log(Timeline.duration);
 });

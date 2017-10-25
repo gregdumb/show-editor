@@ -15,12 +15,15 @@ var helpData = [
     }, {
         title: "Manipulating Keyframes",
         content: "Press G grab & drag keyframes, then LMB to place or RMB to cancel. Use I to invert values, use A to align accross channels"
-    }
+    }, {
+		title: "Copy & Paste",
+		content: "Press D to duplicate selected keyframes"
+	}
 ];
 
 function createHelpCard(t, c, i) {
 
-	let color = (i == true) ? "red" : "blue-grey";
+	let color = (i == true) ? "red darken-2" : "blue-grey darken-2";
 	
 	console.log(color);
 	

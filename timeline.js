@@ -195,8 +195,8 @@ Timeline.mouseMoved = function(e) {
 	}
 	
 	else if(t.state.draggingZoom) {
-		var zoomPercent = x / t.sideBarWidth;
-		t.timeScale = zoomPercent * 200;
+		//var zoomPercent = x / t.sideBarWidth;
+		//t.timeScale = zoomPercent * 200;
 	}
 	
 	else if(t.state.draggingSelection) {
@@ -252,6 +252,8 @@ Timeline.mouseWheel = function(e) {
 	}
 	
 	t.timeScale = Math.clamp(t.timeScale, t.timeScaleMin, t.timeScaleMax);
+	
+	wavesurfer.zoom(t.timeScale);
 	
 	console.log("Timescale", t.timeScale);
 }
