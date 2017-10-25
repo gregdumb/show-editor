@@ -16,17 +16,15 @@
 
 	<div id="app">
 
-		<a class="waves-effect waves-light btn" id="btn-download">Download</a>
+		<!--<ul class="collapsible">
+			<li>
+				<div class="collapsible-header"><i class="material-icons">help</i>Get Help</div>
+				<div class="collapsible-body" id="help-container"></div>
+			</li>
+		</ul>-->
 		
-		<div class="input-field" style="display: inline-block">
-			<select>
-				<option value="1" selected>Option 1</option>
-				<option value="2">Option 2</option>
-				<option value="3">Option 3</option>
-			</select>
-			<label>Materialize Select</label>
-		</div>
-
+		<div id="help-container"></div>
+		
 		<div id="mediacontrols-container">
 			<a class="btn-floating btn-large waves-effect waves-light blue" id="btn-play">
 				<i class="small material-icons" id="icon-play">play_arrow</i>
@@ -34,16 +32,16 @@
 			<a class="btn-floating btn-large waves-effect waves-light blue" id="btn-stop">
 				<i class="large material-icons" id="icon-stop">stop</i>
 			</a>
-			
+			<div class="input-field" style="display: inline-block">
+				<select id="select-rate">
+					<option value="1" selected>1.0x (Normal)</option>
+					<option value="0.5">0.5x</option>
+					<option value="0.25">0.25x</option>
+				</select>
+				<label>Playback Speed</label>
+			</div>
+			<a class="waves-effect waves-light btn" id="btn-download"><i class="material-icons left">file_download</i>Download Project</a>
 		</div>
-
-		<ul class="collapsible">
-			<li>
-				<div class="collapsible-header"><i class="material-icons">help</i>Get Help</div>
-				<div class="collapsible-body" id="help-container"></div>
-			</li>
-		</ul>
-		<p>Test text</p>
 
 		<div id="waveform-container"></div>
 

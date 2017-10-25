@@ -11,7 +11,12 @@ setInterval(function() {
 }, 1000 / 60);
 
 
-// UI on clicks
+// UI on clicks ******************************************
+
+// Initialize
+$(document).ready(function() {
+	$('select').material_select();
+});
 
 $("#btn-download").on("click", function() {
 	var saveString = JSON.stringify(Timeline.tracks);
@@ -27,6 +32,13 @@ $("#btn-stop").on("click", function() {
 	mediaStop();
 });
 
+$("#select-rate").on("change", function() {
+	
+	let newRate = $("#select-rate").val();
+	wavesurfer.setPlaybackRate(newRate);
+	console.log(newRate);
+})
+
 document.addEventListener("keydown", function(e) {
 	var key = e.keyCode;
 	
@@ -34,6 +46,8 @@ document.addEventListener("keydown", function(e) {
 		mediaPlayPause(); 
 	}
 });
+
+// ******************************************************
 
 // WAVEFORM TESTING
 
