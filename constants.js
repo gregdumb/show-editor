@@ -33,12 +33,17 @@ Math.roundUp = function(num, nearest)
     return Math.ceil(num/nearest)*nearest;
 }
 
-Number.prototype.toTimeString = function () {
+Number.prototype.toTimeString = function (showMili = false) {
 	
     var minutes = Math.floor(this / 60);
 	var seconds = Math.floor(this - (minutes * 60));
+	var miliseconds = Math.round((this % 1) * 100);
 	
     //if (minutes < 10) {minutes = "0"+minutes;}
-    if (seconds < 10) {seconds = "0"+seconds;}
-    return minutes+':'+seconds;
+	if (seconds < 10) {seconds = "0"+seconds;}
+	if (miliseconds < 10) {miliseconds = "0"+miliseconds;}
+	
+	if(showMili) return minutes+':'+seconds+':'+miliseconds;
+	else return minutes+':'+seconds;
+    
 }

@@ -343,6 +343,12 @@ Timeline.drawGUI = function() {
 		currentMarker += markerSpacing;
 	} while (xpos < w);
 	
+	// Draw current time
+	this.ctx.strokeStyle = this.lineColor;
+	this.ctx.strokeRect(5, 5, side-10, this.timeBarHeight-10);
+	
+	this.drawText(this.time.toTimeString(true), 20, 10+16, this.lineColor, 16+"px");
+	
 	// Draw zoom area
 	var zoomBarY = h - this.zoomBarHeight;
 	this.drawLine(0, zoomBarY, side, zoomBarY, this.lineColor);
@@ -406,25 +412,31 @@ Timeline.drawGUI = function() {
 	}
 	
 	// FOR DEBUGGING: Draw FPS
-	this.drawText(this.actualfps, 0, 14, "red", 14);
+	this.drawText(this.actualfps, 5, h-5, "red", "24px");
+}
+
+function timelineRenderUpdate() {
+	requestAnimationFrame(timelineRenderUpdate);
+	
+	Timeline.update();
 }
 
 Timeline.update = function() {
 	
-	this.updateTime();
+	Timeline.updateTime();
 	
-	this.selectedKeyframes = this.getSelectedKeyframes();
+	Timeline.selectedKeyframes = Timeline.getSelectedKeyframes();
 	
-	this.drawGUI();
+	Timeline.drawGUI();
 	
 	// DO DELTA TIME FPS STUFF
 	var date = new Date();
 	var now = date.getTime();
-	var delta = now - this.lastTime;
+	var delta = now - Timeline.lastTime;
 	
-	this.actualfps = Math.round(1000 / delta);
+	Timeline.actualfps = Math.round(1000 / delta);
 	
-	this.lastTime = now;
+	Timeline.lastTime = now;
 	//console.log(this.actualfps);
 }
 

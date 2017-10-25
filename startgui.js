@@ -6,9 +6,12 @@ $("body").on("contextmenu", "#timeline-canvas", function(e) {
 	return false;
 });
 
-setInterval(function() {
+/*setInterval(function() {
 	Timeline.update();
-}, 1000 / 60);
+}, 1000 / 120);*/
+
+// Start rendering
+timelineRenderUpdate();
 
 
 // UI on clicks ******************************************

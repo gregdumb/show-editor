@@ -4,6 +4,10 @@ var helpData = [
         content: "Zooming can mess up the editor; make sure your browser zoom is at 100%.",
         important: true
     }, {
+        title: "Perfomance Concerns",
+        content: "The app slows down when it starts getting thousands of keyframes; stay zoomed in during playback to get most accurate speeds.",
+        important: true
+    }, {
         title: "Navigation",
         content: "Scroll the mouse wheel to zoom, click & drag the wheel to pan, and click on the timeline to move the time."
     }, {

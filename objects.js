@@ -1,7 +1,7 @@
 
 var Timeline = function () {
 	this.name = "Global";
-	this.fps = 30;
+	this.fps = 120;
 	this.actualfps = 30;
 	this.lastTime = (new Date()).getTime();
 }
