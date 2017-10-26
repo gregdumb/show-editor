@@ -74,6 +74,18 @@ $("#btn-set-on").on("click", function() {
 	Timeline.setKeyframesOn();
 });
 
+// Settings Modal
+$("#input-project-name").on("change", function() {
+	$("title").html($("#input-project-name").val());
+});
+
+$("#input-music-upload").on("change", function() {
+	
+		var files = $("#input-music-upload").get(0).files;
+		var file = URL.createObjectURL(files[0]); 
+		wavesurfer.load(file);
+});
+
 document.addEventListener("keydown", function(e) {
 	var key = e.keyCode;
 	

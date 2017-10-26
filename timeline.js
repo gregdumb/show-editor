@@ -836,9 +836,14 @@ Timeline.performKeyframeInvert = function() {
 Timeline.setKeyframesOn = function() {
 
 	var selK = this.getSelectedKeyframes();
+	var newState = 1;
 
 	for(let i = 0; i < selK.length; i++) {
-		selK[i].state = 1;
+		if(selK[i].state) newState = 0; break;
+	}
+
+	for(let j = 0; j < selK.length; j++) {
+		selK[j].state = newState;
 	}
 }
 
