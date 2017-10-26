@@ -52,6 +52,12 @@ Timeline.init = function() {
 	this.state.draggingPan = false;
 	this.state.holdingShift = false;
 	this.state.holdingControl = false;
+
+	// Undo
+	this.undoHandler = {};
+	this.undoHandler.position = 0;
+	this.undoHandler.stack = [];
+	this.undoStackSize = 2048;
 	
 	// Keyframing
 	this.tracks = [];
@@ -164,6 +170,7 @@ Timeline.mouseDown = function(e) {
 			// Add new keyframe
 			if(clickedTrack != -1) {
 				
+				t.saveUndoState();
 				var newTime = t.xToTime(x);
 				var newState = t.state.holdingShift ? 1 : 0;
 				
@@ -658,6 +665,7 @@ Timeline.findClosestKeyframe = function(time, trackIndex, onlyBefore = false) {
 }
 
 Timeline.startDraggingKeyframes = function() {
+	this.saveUndoState();
 	Timeline.state.draggingKeyframes = true;
 }
 
@@ -717,6 +725,8 @@ Timeline.deleteSelectedKeyframes = function() {
 				toRemove.push(j);
 			}
 		}
+
+		if(toRemove.length) this.saveUndoState(); // Only save undo state if we actually had anything selected
 		
 		for(let k = toRemove.length - 1; k >= 0; k--) {
 			t.keyframes.splice(toRemove[k], 1);
@@ -725,9 +735,7 @@ Timeline.deleteSelectedKeyframes = function() {
 }
 
 Timeline.duplicateKeyframes = function() {
-	
-	//var newKeyframes = this.getSelectedKeyframes().slice(0); //this.selectedKeyframes.slice(0);
-	
+	this.saveUndoState();
 	var newKeyframes = JSON.parse(JSON.stringify(this.selectedKeyframes));
 	
 	this.deselectAllKeyframes();
@@ -747,7 +755,7 @@ Timeline.duplicateKeyframes = function() {
 }
 
 Timeline.removeDuplicateKeyframes = function() {
-	
+
 	var totalNumDups = 0;
 	
 	for(let i = 0; i < this.tracks.length; i++) {
@@ -770,6 +778,8 @@ Timeline.removeDuplicateKeyframes = function() {
 				}
 			}
 		}
+
+		if(dups.length) this.saveUndoState();
 		
 		totalNumDups += dups.length;
 		
@@ -801,7 +811,8 @@ Timeline.deselectAllKeyframes = function() {
 }
 
 Timeline.performAlign = function() {
-	
+	this.saveUndoState();
+
 	//@TODO replace with getSelectedKeyframes function
 	var selectedKeyframes = [];
 	var totalTime = 0;
@@ -827,6 +838,8 @@ Timeline.performAlign = function() {
 }
 
 Timeline.performKeyframeInvert = function() {
+	this.saveUndoState();
+
 	var selected = this.selectedKeyframes;
 	
 	console.log(selected);
@@ -877,5 +890,28 @@ Timeline.performBoxSelection = function() {
 }
 
 Timeline.undo = function() {
-	popToast("Undo not supported yet :(", true);
+
+	if(this.undoHandler.stack.length) {
+		var newTrackState = this.undoHandler.stack.pop();
+		console.log("Undo to:", newTrackState);
+		this.tracks = newTrackState;
+		popToast("Undo");
+	}
+	else {
+		popToast("Nothing to undo");
+	}
 }
+
+Timeline.saveUndoState = function() {
+	var newState = JSON.parse(JSON.stringify(this.tracks));//jQuery.extend(true, {}, Timeline.tracks);
+
+	var s = this.undoHandler.stack;
+
+	if(s.length < this.undoStackSize) {
+		s.push(newState);
+	}
+
+	//this.undoHandler.stack.push(newState);
+}
+
+//Timeline.undoHandler.stack = [null, null, null, null];
