@@ -22,6 +22,9 @@ var helpData = [
     }, {
 		title: "Copy & Paste",
 		content: "Press D to duplicate selected keyframes"
+	}, {
+		title: "Duplicate Removal",
+		content: "Press R to remove duplicate overlapping keyframes (recommended before export)"
 	}
 ];
 
