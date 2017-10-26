@@ -28,6 +28,7 @@ body {
 	position: absolute;
 	bottom: 520px;
 	height: 80px;
+	width: 100%;
 }
 
 #mediacontrols-container > * {

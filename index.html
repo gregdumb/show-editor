@@ -6,7 +6,7 @@
 	<!-- Import materialize.css -->
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" rel="stylesheet">
 	<link href="./index.css" rel="stylesheet">
-	<title>Xmas app</title>
+	<title>Lightshow Editor</title>
 </head>
 
 <body>
@@ -36,6 +36,10 @@
 			</div>
 			<a class="waves-effect waves-light btn" id="btn-download"><i class="material-icons left">file_download</i>Download Project</a>
 			<a class="waves-effect waves-light btn modal-trigger" href="#modal-upload" id="btn-upload"><i class="material-icons left">file_upload</i>Upload Project</a>
+			
+			<a class="btn-floating btn-large waves-effect waves-light grey darken-2" id="btn-info" href="#modal-info" style"float: right; right: 0px">
+				<i class="material-icons" id="icon-stop">info_outline</i>
+			</a>
 		</div>
 
 		<div id="waveform-container"></div>
@@ -64,14 +68,22 @@
 			<!--a href="#!" class="modal-action modal-close waves-effect red waves-red btn">Upload</a-->
 		</div>
 	</div>
+	
+	<!-- INFO MODAL -->
+	<div id="modal-info" class="modal">
+		<div class="modal-content">
+			<h4>About</h4>
+			<p>Created by Greg Brisebois</p>
+			<p>Libraries used: JQuery, Materialize, and WaveSurfer.js</p>
+		</div>
+	</div>
 
-	<!-- SCRIPTS -->
-	<!--script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.7.19/fabric.js"></script-->
-
+	<!-- LIBRARIES -->
 	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
-
+	
+	<!-- SCRIPTS -->
 	<script src="constants.js"></script>
 	<script src="default.js"></script>
 	<script src="help.js"></script>
