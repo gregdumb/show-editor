@@ -161,7 +161,21 @@ Timeline.mouseDown = function(e) {
 		else if(clicked == RIGHTCLICK) {
 			// Add new keyframe
 			if(clickedTrack != -1) {
-				t.tracks[clickedTrack].keyframes.push(new Keyframe(clickedTrack, t.xToTime(x), 0));
+				
+				var newTime = t.xToTime(x);
+				var newState = t.state.holdingShift ? 1 : 0;
+				
+				// When holding control, add to all tracks
+				if(t.state.holdingControl) {
+					for(let i = 0; i < t.tracks.length; i++) {
+						t.tracks[i].keyframes.push(new Keyframe(i, newTime, newState));
+					}
+				}
+				else {
+					t.tracks[clickedTrack].keyframes.push(new Keyframe(clickedTrack, t.xToTime(x), newState));
+				}
+				
+				t.sortKeyframes();
 			}
 			
 		}
