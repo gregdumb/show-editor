@@ -304,6 +304,10 @@ Timeline.keyDown = function(e) {
 	if(key == KEY_R) {
 		Timeline.removeDuplicateKeyframes();
 	}
+
+	if(key == KEY_Z) {
+		if(Timeline.state.holdingControl) Timeline.undo();
+	}
 	
 	if(key == KEY_SHIFT) {
 		Timeline.state.holdingShift = true;
@@ -870,4 +874,8 @@ Timeline.performBoxSelection = function() {
 			k.selected = (isInside(tX, startX, endX) && isInside(trackY, startY, endY)) || (k.selected && this.state.holdingShift);
 		}
 	}
+}
+
+Timeline.undo = function() {
+	popToast("Undo not supported yet :(", true);
 }

@@ -20,7 +20,7 @@
 		
 		<!-- CONTROL TOOLBAR -->
 		<div id="mediacontrols-container">
-			<a class="btn-floating btn-large waves-effect waves-light blue" id="btn-play">
+			<a class="btn btn-floating btn-large waves-effect waves-light blue pulse" id="btn-play">
 				<i class="small material-icons" id="icon-play">play_arrow</i>
 			</a>
 			<a class="btn-floating btn-large waves-effect waves-light blue" id="btn-stop">
@@ -83,7 +83,7 @@
 		<div class="modal-content">
 			<h4>About</h4>
 			<p>Created by Greg Brisebois</p>
-			<p>See help cards for information on editing. Currently the song cannot be changed but you can save and upload project files (keyframe sets).</p>
+			<p>See help cards for information on editing.</p>
 			<p>Libraries used: JQuery, Materialize, and Wavesurfer.js. Timeline rendered using canvas.</p>
 		</div>
 	</div>
@@ -99,7 +99,7 @@
 			<div class="file-field input-field">
 				<div class="btn">
 					<span>Audio File</span>
-					<input type="file" id="input-music-upload">
+					<input type="file" id="input-music-upload" accept="audio/*">
 				</div>
 				<div class="file-path-wrapper">
 					<input class="file-path validate" type="text">

@@ -8,6 +8,9 @@ var helpData = [
         content: "The app slows down when it starts getting thousands of keyframes; stay zoomed in during playback to get most accurate speeds.",
         important: true
     }, {
+        title: "Loading/Saving",
+        content: "You can change the song by clicking on the gear icon. 'Project Files' are just text files with the keyframe data, you can load/save those with the buttons."
+    }, {
         title: "Navigation",
         content: "Scroll the mouse wheel to zoom, click & drag the wheel to pan, and click on the timeline to move the time."
     }, {

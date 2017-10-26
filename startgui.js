@@ -80,10 +80,7 @@ $("#input-project-name").on("change", function() {
 });
 
 $("#input-music-upload").on("change", function() {
-	
-		var files = $("#input-music-upload").get(0).files;
-		var file = URL.createObjectURL(files[0]); 
-		wavesurfer.load(file);
+	uploadAudio($("#input-music-upload"));
 });
 
 document.addEventListener("keydown", function(e) {
@@ -134,6 +131,11 @@ function onProjectFileLoad(e) {
 	}
 }
 
+function uploadAudio(audioInputElement) {
+	var files = audioInputElement.get(0).files;
+	var file = URL.createObjectURL(files[0]); 
+	wavesurfer.load(file);
+}
 
 // ******************************************************
 // WAVEFORM TESTING
