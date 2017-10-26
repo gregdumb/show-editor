@@ -18,13 +18,35 @@ timelineRenderUpdate();
 
 // Initialize
 $(document).ready(function() {
+	// Initialize MaterializeCSS things
 	$('select').material_select();
+	$('.modal').modal();
 });
 
 $("#btn-download").on("click", function() {
 	var saveString = JSON.stringify(Timeline.tracks);
 	
-	prompt("Save this:", saveString);
+	downloadPlaintext("showproject.txt", saveString);
+	
+	//prompt("Save this:", saveString);
+});
+
+$("#btn-upload-file").on("click", function() {
+	
+	//console.log($("#input-project-upload").get(0).files);
+	/*
+	var f = $("#input-project-upload").get(0).files[0];
+	var fReader = new FileReader();
+	
+	fReader.onload = (function(theFile) {
+		return function(e) {
+			alert(theFile.result);
+		}
+	})(f);*/
+
+	uploadFile("#input-project-upload", onProjectFileLoad);
+	
+	$(".modal").modal("close"); // Close all modals
 });
 
 $("#btn-play").on("click", function() {
@@ -50,8 +72,46 @@ document.addEventListener("keydown", function(e) {
 	}
 });
 
-// ******************************************************
 
+// ******************************************************
+// FILE UPLOADING
+
+function uploadFile(inputElement, onLoadHandler) {
+
+	var fileObject = $(inputElement).get(0);
+
+	var reader = new FileReader();
+	if (fileObject.files.length) {
+		var textFile = fileObject.files[0];
+		// Read the file
+		reader.readAsText(textFile);
+		// When it's loaded, process it
+		$(reader).on('load', onLoadHandler);
+	}
+	else {
+		alert('Please upload a file before continuing')
+	}
+
+}
+
+function onProjectFileLoad(e) {
+	var fileContents = e.target.result;
+	
+	if(fileContents && fileContents.length) {
+		try {
+			Timeline.tracks = JSON.parse(fileContents);
+		}
+		catch (e) {
+			alert("Project file is invalid!");
+		}
+	}
+	else {
+		alert("Error uploading file!");
+	}
+}
+
+
+// ******************************************************
 // WAVEFORM TESTING
 
 function mediaPlayPause() {

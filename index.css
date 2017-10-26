@@ -62,3 +62,11 @@ body {
 	display: inline-block;
 	vertical-align: top;
 }
+
+.modal {
+	max-width: 600px;
+}
+
+#modalfooter1 > * {
+	margin-right: 10px;
+}
