@@ -381,7 +381,10 @@ Timeline.drawGUI = function() {
 				var selected = this.tracks[i].keyframes[j].selected;
 				var fillColor = (state) ? this.onKeyframeColor : this.offKeyframeColor;
 				var lineColor = (selected) ? this.selectedKeyframeOutline : this.keyframeOutline;
-				this.drawDiamond(x, y, 8, lineColor, fillColor);
+				
+				// Draw a diamond or a line depending on how zoomed out we are
+				if(this.timeScale <= 20) this.drawKeyframeLine(x, y, 8, lineColor);
+				else this.drawDiamond(x, y, 8, lineColor, fillColor);
 			}
 		}
 	}
@@ -398,7 +401,28 @@ Timeline.drawGUI = function() {
 	
 	// Draw time position indicator
 	var timeX = this.timeToX(this.time);
-	if(timeX >= side) this.drawLine(timeX, 0, timeX, h, "#cc0000");
+	var timeArrowY = Math.round(this.timeBarHeight/2);
+	if(timeX < side) { // Draw left arrow
+		this.ctx.fillStyle = "#cc0000";
+		this.ctx.beginPath();
+		this.ctx.moveTo(side, timeArrowY);
+		this.ctx.lineTo(side+8, timeArrowY+8);
+		this.ctx.lineTo(side+8, timeArrowY-8);
+		this.ctx.closePath();
+		this.ctx.fill();
+	}
+	else if(timeX > w) { // Draw right arrow
+		this.ctx.fillStyle = "#cc0000";
+		this.ctx.beginPath();
+		this.ctx.moveTo(w, timeArrowY);
+		this.ctx.lineTo(w-8, timeArrowY+8);
+		this.ctx.lineTo(w-8, timeArrowY-8);
+		this.ctx.closePath();
+		this.ctx.fill();
+	}
+	else {
+		this.drawLine(timeX, 0, timeX, h, "#cc0000");
+	}
 	
 	// Draw selection box
 	if(this.state.draggingSelection) {
@@ -506,6 +530,15 @@ Timeline.drawDiamond = function(x, y, size, color, fillColor) {
 		this.ctx.fill();
 	}
 	
+	this.ctx.stroke();
+}
+
+Timeline.drawKeyframeLine = function(x, y, size, color) {
+	
+	this.ctx.strokeStyle = color;
+	this.ctx.beginPath();
+	this.ctx.moveTo(x, y+size);
+	this.ctx.lineTo(x, y-size);
 	this.ctx.stroke();
 }
 
