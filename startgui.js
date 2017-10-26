@@ -60,7 +60,19 @@ $("#select-rate").on("change", function() {
 	let newRate = $("#select-rate").val();
 	wavesurfer.setPlaybackRate(newRate);
 	console.log(newRate);
-})
+});
+
+$("#btn-align").on("click", function() {
+	Timeline.performAlign();
+});
+
+$("#btn-remove-dups").on("click", function() {
+	Timeline.removeDuplicateKeyframes();
+});
+
+$("#btn-set-on").on("click", function() {
+	Timeline.setKeyframesOn();
+});
 
 document.addEventListener("keydown", function(e) {
 	var key = e.keyCode;

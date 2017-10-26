@@ -798,6 +798,7 @@ Timeline.deselectAllKeyframes = function() {
 
 Timeline.performAlign = function() {
 	
+	//@TODO replace with getSelectedKeyframes function
 	var selectedKeyframes = [];
 	var totalTime = 0;
 	
@@ -829,6 +830,15 @@ Timeline.performKeyframeInvert = function() {
 	for(let i = 0; i < selected.length; i++) {
 		
 		selected[i].state = !selected[i].state;
+	}
+}
+
+Timeline.setKeyframesOn = function() {
+
+	var selK = this.getSelectedKeyframes();
+
+	for(let i = 0; i < selK.length; i++) {
+		selK[i].state = 1;
 	}
 }
 
