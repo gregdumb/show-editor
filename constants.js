@@ -8,10 +8,18 @@ const KEY_A = 65;
 const KEY_D = 68;
 const KEY_G = 71;
 const KEY_I = 73;
+const KEY_R = 82;
 
 const LEFTCLICK = 1;
 const MIDCLICK = 2;
 const RIGHTCLICK = 3;
+
+// Toast
+
+function popToast(text, bad = false) {
+	let color = (bad) ? "red darken-4" : "grey darken-4";
+	Materialize.toast(text, 4000, color);
+}
 
 // File downloading
 function downloadPlaintext(filename, text) {

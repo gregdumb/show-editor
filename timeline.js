@@ -5,6 +5,7 @@ Timeline.init = function() {
 	this.height = 400;
 	this.timeBarHeight = 40;
 	this.timeMarkerLabelSize = 14;
+	this.toastDuration = 4000;
 	
 	this.sideBarWidth = 100;
 	this.zoomBarHeight = 30;
@@ -56,6 +57,7 @@ Timeline.init = function() {
 	this.tracks = [];
 	this.selectedKeyframes = [];
 	this.activeTracks = [];
+	this.duplicateKeyframeTolerance = 0.01;
 	
 	// Create canvas
 	this.container = $("#timeline-container");
@@ -297,6 +299,10 @@ Timeline.keyDown = function(e) {
 	
 	if(key == KEY_I) {
 		Timeline.performKeyframeInvert();
+	}
+	
+	if(key == KEY_R) {
+		Timeline.removeDuplicateKeyframes();
 	}
 	
 	if(key == KEY_SHIFT) {
@@ -734,6 +740,49 @@ Timeline.duplicateKeyframes = function() {
 	}
 	
 	this.startDraggingKeyframes();
+}
+
+Timeline.removeDuplicateKeyframes = function() {
+	
+	var totalNumDups = 0;
+	
+	for(let i = 0; i < this.tracks.length; i++) {
+		
+		var t = this.tracks[i];
+		var dups = [];
+		
+		for(let j = 0; j < t.keyframes.length; j++) {
+			
+			let k1 = t.keyframes[j];
+			
+			for(let l = j+1; l < t.keyframes.length; l++) {
+				
+				let k2 = t.keyframes[l]
+				
+				if(this.checkOverlap(k1, k2)) {
+					if(k1.state) k2.state = 1;
+					dups.push(j);
+					break;
+				}
+			}
+		}
+		
+		totalNumDups += dups.length;
+		
+		for(let m = dups.length - 1; m >= 0; m--) {
+			t.keyframes.splice(dups[m], 1);
+		}
+		
+		console.log("Duplicates:", dups);
+	}
+	
+	console.log("Removed", totalNumDups, "duplicates");
+	popToast("Removed " + totalNumDups + " duplicates");
+}
+
+Timeline.checkOverlap = function (k1, k2) {
+	let tol = this.duplicateKeyframeTolerance;
+	return Math.abs(k1.time - k2.time) < tol;
 }
 
 Timeline.deselectAllKeyframes = function() {

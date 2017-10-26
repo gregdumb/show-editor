@@ -45,8 +45,6 @@ $("#btn-upload-file").on("click", function() {
 	})(f);*/
 
 	uploadFile("#input-project-upload", onProjectFileLoad);
-	
-	$(".modal").modal("close"); // Close all modals
 });
 
 $("#btn-play").on("click", function() {
@@ -89,7 +87,7 @@ function uploadFile(inputElement, onLoadHandler) {
 		$(reader).on('load', onLoadHandler);
 	}
 	else {
-		alert('Please upload a file before continuing')
+		popToast("Please select a file", true);
 	}
 
 }
@@ -100,13 +98,15 @@ function onProjectFileLoad(e) {
 	if(fileContents && fileContents.length) {
 		try {
 			Timeline.tracks = JSON.parse(fileContents);
+			$(".modal").modal("close"); // Close all modals
+			popToast("Project loaded");
 		}
 		catch (e) {
-			alert("Project file is invalid!");
+			popToast("Project file is invalid", true);
 		}
 	}
 	else {
-		alert("Error uploading file!");
+		popToast("Error loading file", true);
 	}
 }
 

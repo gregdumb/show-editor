@@ -64,6 +64,12 @@ body {
 	vertical-align: top;
 }
 
+#toast-container {
+	top: auto !important;
+	right: 100px !important;
+	bottom: 50px;
+}
+
 .modal {
 	max-width: 600px;
 }

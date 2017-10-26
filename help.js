@@ -15,7 +15,7 @@ var helpData = [
         content: "Use LMB to select; drag to box-select; hold shift to preserve selection."
     }, {
         title: "Adding/Deleting Keyframes",
-        content: "Use RMB to add a new keyframe."
+        content: "Use RMB to add a new (off) keyframe. Hold Shift to make it an on keyframe, and/or hold Control to add a keyframe to each channel at the same time."
     }, {
         title: "Manipulating Keyframes",
         content: "Press G grab & drag keyframes, then LMB to place or RMB to cancel. Use I to invert values, use A to align accross channels"
