@@ -20,12 +20,17 @@
 		
 		<!-- CONTROL TOOLBAR -->
 		<div id="mediacontrols-container">
+			<!-- PLAY BUTTON -->
 			<a class="btn btn-floating btn-large waves-effect waves-light blue pulse" id="btn-play">
 				<i class="small material-icons" id="icon-play">play_arrow</i>
 			</a>
+			
+			<!-- STOP BUTTON -->
 			<a class="btn-floating btn-large waves-effect waves-light blue" id="btn-stop">
 				<i class="large material-icons" id="icon-stop">stop</i>
 			</a>
+			
+			<!-- SPEED DROPDOWN -->
 			<div class="input-field white-text" style="display: inline-block">
 				<select id="select-rate">
 					<option value="1" selected>1.0x (Normal)</option>
@@ -35,17 +40,33 @@
 				<label>Playback Speed</label>
 			</div>
 			
-			<a class="btn-floating btn tooltipped waves-effect waves-light pink" data-tooltip="Align Selected Keyframes" id="btn-align"><i class="material-icons">compare_arrows</i></a>
-			<a class="btn-floating btn tooltipped waves-effect waves-light pink" data-tooltip="Remove Duplicate Keyframes" id="btn-remove-dups"><i class="material-icons">flip_to_front</i></a>
-			<a class="btn-floating btn tooltipped waves-effect waves-light pink" data-tooltip="Toggle Keyframe Values" id="btn-set-on"><i class="material-icons">lightbulb_outline</i></a>
-
-			<a class="waves-effect waves-light btn" id="btn-download"><i class="material-icons left">file_download</i>Save Project</a>
-			<a class="waves-effect waves-light btn modal-trigger" href="#modal-upload" id="btn-upload"><i class="material-icons left">file_upload</i>Open Project</a>
+			<!-- ALIGN BUTTON -->
+			<a class="btn-floating btn tooltipped waves-effect waves-light pink" data-tooltip="Align Selected Keyframes" id="btn-align">
+				<i class="material-icons">compare_arrows</i>
+			</a>
+			<!-- REMOVE DUPS BUTTON -->
+			<a class="btn-floating btn tooltipped waves-effect waves-light pink" data-tooltip="Remove Duplicate Keyframes" id="btn-remove-dups">
+				<i class="material-icons">flip_to_front</i>
+			</a>
+			<!-- INVERT BUTTON -->
+			<a class="btn-floating btn tooltipped waves-effect waves-light pink" data-tooltip="Toggle Keyframe Values" id="btn-set-on">
+				<i class="material-icons">lightbulb_outline</i>
+			</a>
 			
+			<!-- DOWNLOAD BUTTON -->
+			<a class="waves-effect waves-light btn" id="btn-download">
+				<i class="material-icons left">file_download</i>Save Project</a>
+				
+			<!-- UPLOAD BUTTON -->
+			<a class="waves-effect waves-light btn modal-trigger" href="#modal-upload" id="btn-upload">
+				<i class="material-icons left">file_upload</i>Open Project</a>
+			
+			<!-- SETTINGS BUTTON -->
 			<a class="btn-floating btn-large waves-effect waves-light grey darken-2" id="btn-settings" href="#modal-settings">
 				<i class="material-icons" id="icon-stop">settings</i>
 			</a>
-
+			
+			<!-- INFO BUTTON -->
 			<a class="btn-floating btn-large waves-effect waves-light grey darken-2" id="btn-info" href="#modal-info" style"float: right; right: 0px">
 				<i class="material-icons" id="icon-stop">info_outline</i>
 			</a>
