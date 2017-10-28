@@ -234,6 +234,7 @@ Timeline.mouseMoved = function(e) {
 		var deltaTime = deltaX / t.timeScale;
 		//console.log(t.timePanStartViewPosition);
 		t.timeViewPosition = Math.clamp(t.timePanStartViewPosition + deltaTime, 0, t.duration);
+		wavesurfer.setScroll(t.timeViewPosition * t.timeScale);
 	}
 	
 	else if(t.state.draggingKeyframes) {

@@ -23,6 +23,7 @@ var wavesurfer = WaveSurfer.create({
 	container: "#waveform-container",
 	partialRender: true,
 	audioRate: 1,
+	autoCenter: false,
 	hideScrollbar: true,
 	// Colors
 	cursorColor: "white"
