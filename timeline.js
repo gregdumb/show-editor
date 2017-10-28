@@ -54,10 +54,7 @@ Timeline.init = function() {
 	this.state.holdingControl = false;
 
 	// Undo
-	this.undoHandler = {};
-	this.undoHandler.position = 0;
-	this.undoHandler.stack = [];
-	this.undoStackSize = 2048;
+	this.undoBuffer = new CBuffer(64);
 	
 	// Keyframing
 	this.tracks = [];
@@ -234,7 +231,9 @@ Timeline.mouseMoved = function(e) {
 		var deltaTime = deltaX / t.timeScale;
 		//console.log(t.timePanStartViewPosition);
 		t.timeViewPosition = Math.clamp(t.timePanStartViewPosition + deltaTime, 0, t.duration);
-		wavesurfer.setScroll(t.timeViewPosition * t.timeScale);
+		console.log("Setting ScrollLeft to:", t.timeViewPosition * t.timeScale);
+		wavesurfer.setScroll(Math.ceil(t.timeViewPosition * t.timeScale));
+		//wavesurfer.drawBuffer();
 	}
 	
 	else if(t.state.draggingKeyframes) {
@@ -278,6 +277,7 @@ Timeline.mouseWheel = function(e) {
 	t.timeScale = Math.clamp(t.timeScale, t.timeScaleMin, t.timeScaleMax);
 	
 	wavesurfer.zoom(t.timeScale);
+	wavesurfer.setScroll(t.timeViewPosition * t.timeScale);
 	
 	console.log("Timescale", t.timeScale);
 }
@@ -892,10 +892,20 @@ Timeline.performBoxSelection = function() {
 
 Timeline.undo = function() {
 
-	if(this.undoHandler.stack.length) {
+	/*if(this.undoHandler.buffer.length) {
 		var newTrackState = this.undoHandler.stack.pop();
 		console.log("Undo to:", newTrackState);
 		this.tracks = newTrackState;
+		popToast("Undo");
+	}
+	else {
+		popToast("Nothing to undo");
+	}*/
+	
+	var lastState = this.undoBuffer.pop();
+	
+	if(lastState != null) {
+		this.tracks = lastState;
 		popToast("Undo");
 	}
 	else {
@@ -904,15 +914,14 @@ Timeline.undo = function() {
 }
 
 Timeline.saveUndoState = function() {
-	var newState = JSON.parse(JSON.stringify(this.tracks));//jQuery.extend(true, {}, Timeline.tracks);
-
-	var s = this.undoHandler.stack;
+	var newState = JSON.parse(JSON.stringify(this.tracks));
+	this.undoBuffer.push(newState);
+	
+	/*var s = this.undoHandler.stack;
 
 	if(s.length < this.undoStackSize) {
 		s.push(newState);
-	}
-
-	//this.undoHandler.stack.push(newState);
+	}*/
 }
 
 //Timeline.undoHandler.stack = [null, null, null, null];

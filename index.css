@@ -38,12 +38,13 @@ body {
 }
 
 #waveform-container {
-	width: 100%;
 	height: fit-content;
 	z-index: 0;
 	pointer-events: none;
 	position: absolute;
 	bottom: 400px;
+	left: 100px;
+	right: 0px;
 	overflow: hidden;
 }
 
