@@ -924,4 +924,107 @@ Timeline.saveUndoState = function() {
 	}*/
 }
 
+Timeline.tracksToShowfile = function() {
+	// All keyframes in sequence
+	var allKeyframes = [];
+	
+	// Combine all tracks
+	for(let i = 0; i < this.tracks.length; i++) {
+		allKeyframes = allKeyframes.concat(this.tracks[i].keyframes);
+	}
+	
+	if(allKeyframes.length == 0) {
+		popToast("You don't have anything to export");
+		return;
+	}
+	
+	// Sort by time
+	allKeyframes.sort(function(a, b) {
+		return a.time - b.time;
+	});
+	
+	// Keyframes grouped by time
+	var groupedKeyframes = [];
+	var currentKeyframeGroup = new KeyframeGroup(0);
+	
+	// Assemble keyframes by time
+	for(let i = 0; i < allKeyframes.length; i++) {
+		
+		let k = allKeyframes[i];
+		let t = currentKeyframeGroup.time;
+		
+		// If this keyframe is the same time as the last keyframe
+		if(isCloseTo(k.time, t, this.duplicateKeyframeTolerance)) {
+			currentKeyframeGroup.keyframes.push(k);
+		}
+		// If it's a new time
+		else {
+			let newGroup = JSON.parse(JSON.stringify(currentKeyframeGroup));
+			groupedKeyframes.push(newGroup);
+			currentKeyframeGroup = new KeyframeGroup(k.time);
+			currentKeyframeGroup.keyframes.push(k);
+		}
+	}
+	
+	// Push the last set of keyframes so we don't miss it!
+	groupedKeyframes.push(currentKeyframeGroup);
+	
+	var finalKeyframes = [];
+	var blankKeyframe = new CrossTrackKeyframe(0, this.tracks.length);
+	
+	for(let i = 0; i < groupedKeyframes.length; i++) {
+		let g = groupedKeyframes[i];
+		
+		// Initialize new frame
+		let newFrame = new CrossTrackKeyframe(g.time, this.tracks.length);
+		
+		// Get previous keyframe
+		let prevFrame = (i == 0) ? null : finalKeyframes[i - 1];
+		
+		// Fill values with known new values
+		for(let k = 0; k < g.keyframes.length; k++) {
+			let channel = g.keyframes[k].channel;
+			newFrame.values[channel] = (g.keyframes[k].state) ? 1 : 0;
+			console.log("Set ", channel, " to ", newFrame.values[channel]);
+		}
+		
+		// Fill empty values with previous frame's value
+		for(let v = 0; v < newFrame.values.length; v++) {
+			if(newFrame.values[v] == undefined) {
+				
+				if(prevFrame != null) {
+					newFrame.values[v] = prevFrame.values[v];
+				}
+				else {
+					newFrame.values[v] = 0;
+				}
+				
+			}
+		}
+		
+		finalKeyframes.push(newFrame);
+	}
+	
+	var stringKeyframes = "";
+	
+	// Convert keyframes to string
+	for(let i = 0; i < finalKeyframes.length; i++) {
+		let k = finalKeyframes[i];
+		let newString = k.time;
+		
+		for(let n = 0; n < k.values.length; n++) {
+			newString += "," + k.values[n];
+		}
+		
+		newString += "\n";
+		
+		stringKeyframes += newString;
+	}
+	
+	downloadPlaintext("exportedshow.txt", stringKeyframes);
+	
+	console.log(groupedKeyframes);
+	console.log(finalKeyframes);
+}
+
 //Timeline.undoHandler.stack = [null, null, null, null];

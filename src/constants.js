@@ -45,6 +45,10 @@ function isInside(n, a, b) {
 	return (n <= greater && n >= lesser);
 }
 
+function isCloseTo(a, b, delta) {
+	return isInside(a, b-delta, b+delta);
+}
+
 Math.clamp = function (num, min, max) {
 	return Math.min(Math.max(num, min), max);
 };

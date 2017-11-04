@@ -19,6 +19,16 @@ function Keyframe(channel, time, state) {
 	this.selected = false;
 }
 
+function KeyframeGroup(time) {
+	this.time = time;
+	this.keyframes = []; // keyframes;
+}
+
+function CrossTrackKeyframe(time, numTracks) {
+	this.time = time;
+	this.values = new Array(numTracks);
+}
+
 var wavesurfer = WaveSurfer.create({
 	container: "#waveform-container",
 	partialRender: true,

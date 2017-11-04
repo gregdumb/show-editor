@@ -47,6 +47,10 @@ $("#btn-upload-file").on("click", function() {
 	uploadFile("#input-project-upload", onProjectFileLoad);
 });
 
+$("#btn-export").on("click", function() {
+	Timeline.tracksToShowfile();
+});
+
 $("#btn-play").on("click", function() {
 	mediaPlayPause();
 });
