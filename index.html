@@ -18,7 +18,45 @@
 		
 		<div id="help-container"></div>
 		
-		<!-- CONTROL TOOLBAR -->
+		<!-- TOOLBAR -->
+		<div id="toolbar-container">
+			<!-- OPEN REMOTE PROJECT -->
+			<a class="waves-effect red waves-light btn modal-trigger" href="#modal-open-remote" id="btn-new">
+				<i class="material-icons left">file_download</i> OPEN REMOTE
+			</a>
+			
+			<!-- DOWNLOAD BUTTON -->
+			<a class="waves-effect waves-light btn" id="btn-download">
+				<i class="material-icons left">file_download</i> Save Project
+			</a>
+			
+			<!-- UPLOAD BUTTON -->
+			<a class="waves-effect waves-light btn modal-trigger" href="#modal-upload" id="btn-upload">
+				<i class="material-icons left">file_upload</i> Open Project
+			</a>
+				
+			<!-- NEW BUTTON -->
+			<a class="waves-effect waves-light btn modal-trigger" href="#modal-new" id="btn-new">
+				<i class="material-icons left">create_new_folder</i> New Project
+			</a>
+			
+			<!-- EXPORT BUTTON -->
+			<a class="waves-effect waves-light btn modal-trigger" id="btn-export">
+				<i class="material-icons left">import_export</i> Export Showfile
+			</a>
+			
+			<!-- SETTINGS BUTTON -->
+			<a class="btn-floating btn-large waves-effect waves-light grey darken-2" id="btn-settings" href="#modal-settings">
+				<i class="material-icons" id="icon-stop">settings</i>
+			</a>
+			
+			<!-- INFO BUTTON -->
+			<a class="btn-floating btn-large waves-effect waves-light grey darken-2" id="btn-info" href="#modal-info" style"float: right; right: 0px">
+				<i class="material-icons" id="icon-stop">info_outline</i>
+			</a>
+		</div>
+		
+		<!-- MEDIA BUTTONS -->
 		<div id="mediacontrols-container">
 			<!-- PLAY BUTTON -->
 			<a class="btn btn-floating btn-large waves-effect waves-light blue pulse" id="btn-play">
@@ -52,36 +90,6 @@
 			<a class="btn-floating btn tooltipped waves-effect waves-light pink" data-tooltip="Toggle Keyframe Values" id="btn-set-on">
 				<i class="material-icons">lightbulb_outline</i>
 			</a>
-			
-			<!-- DOWNLOAD BUTTON -->
-			<a class="waves-effect waves-light btn" id="btn-download">
-				<i class="material-icons left">file_download</i> Save Project
-			</a>
-				
-			<!-- UPLOAD BUTTON -->
-			<a class="waves-effect waves-light btn modal-trigger" href="#modal-upload" id="btn-upload">
-				<i class="material-icons left">file_upload</i> Open Project
-			</a>
-				
-			<!-- NEW BUTTON -->
-			<a class="waves-effect waves-light btn modal-trigger" href="#modal-new" id="btn-new">
-				<i class="material-icons left">create_new_folder</i> New Project
-			</a>
-			
-			<!-- EXPORT BUTTON -->
-			<a class="waves-effect waves-light btn modal-trigger" id="btn-export">
-				<i class="material-icons left">import_export</i> Export Showfile
-			</a>
-			
-			<!-- SETTINGS BUTTON -->
-			<a class="btn-floating btn-large waves-effect waves-light grey darken-2" id="btn-settings" href="#modal-settings">
-				<i class="material-icons" id="icon-stop">settings</i>
-			</a>
-			
-			<!-- INFO BUTTON -->
-			<a class="btn-floating btn-large waves-effect waves-light grey darken-2" id="btn-info" href="#modal-info" style"float: right; right: 0px">
-				<i class="material-icons" id="icon-stop">info_outline</i>
-			</a>
 		</div>
 
 		<div id="waveform-container"></div>
@@ -111,27 +119,53 @@
 		</div>
 	</div>
 	
-	<!-- NEW PROJECT MODAL -->
-	<div id="modal-new" class="modal">
+	<!-- PROJECT OPEN REMOTE MODAL -->
+	<div id="modal-open-remote" class="modal" style="height: 80%">
 		<div class="modal-content">
-			<h4>New Project</h4>
+			<h4>Open Project from PHP</h4>
 			<div class="input-field">
-				<input id="input-new-project-name" type="text" class="validate">
-				<label for="input-new-project-name">Project Name</label>
-			</div>
-			<div class="file-field input-field">
-				<div class="btn">
-					<span>Audio File</span>
-					<input type="file" id="input-audio-upload">
-				</div>
-				<div class="file-path-wrapper">
-					<input class="file-path validate" type="audio/*">
-				</div>
+				<select>
+					<option value="" disabled selected>Choose your option</option>
+					<option value="1">Option 1</option>
+					<option value="2">Option 2</option>
+					<option value="3">Option 3</option>
+				</select>
 			</div>
 		</div>
 		<div class="modal-footer" id="modalfooter1">
 			<a href="#!" class="modal-action modal-close waves-effect red darken-2 waves-red btn"><i class="material-icons left">close</i>Cancel</a>
-			<a class="waves-effect waves-light btn" id="btn-create-new"><i class="material-icons left">check</i>Create</a>
+			<a class="waves-effect waves-light btn" id="btn-open-remote-file"><i class="material-icons left">check</i>Open</a>
+			<!--a href="#!" class="modal-action modal-close waves-effect red waves-red btn">Upload</a-->
+		</div>
+	</div>
+	
+	<!-- NEW PROJECT MODAL -->
+	<div id="modal-new" class="modal">
+		<div class="modal-content">
+			<h4>New Project</h4>
+			<form id="form-new-project" method="post" enctype="multipart/form-data">
+				<div class="input-field">
+					<input id="input-new-project-name" type="text" class="validate">
+					<label for="input-new-project-name">Project Name</label>
+				</div>
+				<div class="file-field input-field">
+					<div class="btn">
+						<span>Audio File</span>
+						<input type="file" id="input-audio-upload">
+					</div>
+					<div class="file-path-wrapper">
+						<input class="file-path validate" type="audio/*">
+					</div>
+				</div>
+				<div class="input-field">
+					<input id="input-num-channels" type="number" class="validate">
+					<label for="input-num-channels">Number of Channels</label>
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer" id="modalfooter1">
+			<a href="#!" class="modal-action modal-close waves-effect red darken-2 waves-red btn"><i class="material-icons left">close</i>Cancel</a>
+			<a class="waves-effect waves-light btn" id="btn-new-project"><i class="material-icons left">check</i>Create</a>
 			<!--a href="#!" class="modal-action modal-close waves-effect red waves-red btn">Upload</a-->
 		</div>
 	</div>
@@ -178,6 +212,7 @@
 	<script src="src/default.js"></script>
 	<script src="src/help.js"></script>
 	<script src="src/objects.js"></script>
+	<script src="src/file.js"></script>
 	<script src="src/timeline.js"></script>
 	<script src="src/startgui.js"></script>
 </body>

@@ -18,10 +18,23 @@ body {
 	width: 100%;
 	position: absolute;
 	top: 0;
-	bottom: 610px;
+	bottom: 690px;
 	border-bottom-color: grey;
 	border-bottom-style: solid;
 	border-bottom-width: 2px;
+}
+
+#toolbar-container {
+	position: absolute;
+	bottom: 600px;
+	height: 80px;
+	width: 100%;
+}
+
+#toolbar-container > * {
+	margin-top: 10px;
+	margin-bottom: 10px;
+    margin-left: 20px;
 }
 
 #mediacontrols-container {
@@ -77,4 +90,12 @@ body {
 
 #modalfooter1 > * {
 	margin-right: 10px;
+}
+
+.input {
+	margin-bottom: 20px;
+}
+
+.select-dropdown{
+    overflow-y: auto !important;
 }

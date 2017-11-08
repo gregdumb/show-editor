@@ -22,18 +22,10 @@ function popToast(text, bad = false) {
 	Materialize.toast(text, 4000, color);
 }
 
-// File downloading
-function downloadPlaintext(filename, text) {
-	var element = document.createElement('a');
-	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-	element.setAttribute('download', filename);
 
-	element.style.display = 'none';
-	document.body.appendChild(element);
 
-	element.click();
-
-	document.body.removeChild(element);
+function idify(nameStr) {
+	return nameStr.trim().replace(/\s+/g,"_").toLowerCase();
 }
 
 // Math functions=

@@ -1,6 +1,11 @@
 
 Timeline.init = function() {
 	
+	this.projectData = {
+		"name": "Wizards in Winter",
+		"id": "wizards_in_winter"
+	}
+	
 	// UI variables
 	this.height = 400;
 	this.timeBarHeight = 40;
@@ -84,6 +89,22 @@ Timeline.init = function() {
 	this.canvas.addEventListener("wheel", this.mouseWheel);
 	document.addEventListener("keydown", this.keyDown);
 	document.addEventListener("keyup", this.keyUp);
+}
+
+Timeline.getProjectObject = function() {
+	
+	var obj = {
+		"projectData": this.projectData,
+		"tracks": this.tracks
+	};
+	
+	return obj;
+}
+
+Timeline.loadProjectObject = function(obj) {
+	
+	this.projectData = obj.projectData;
+	this.tracks = obj.tracks;
 }
 
 Timeline.mouseDown = function(e) {
@@ -927,6 +948,8 @@ Timeline.saveUndoState = function() {
 Timeline.tracksToShowfile = function() {
 	// All keyframes in sequence
 	var allKeyframes = [];
+	
+	this.removeDuplicateKeyframes();
 	
 	// Combine all tracks
 	for(let i = 0; i < this.tracks.length; i++) {

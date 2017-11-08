@@ -24,26 +24,17 @@ $(document).ready(function() {
 });
 
 $("#btn-download").on("click", function() {
-	var saveString = JSON.stringify(Timeline.tracks);
 	
-	downloadPlaintext("showproject.txt", saveString);
+	var saveObj = Timeline.getProjectObject();
+	var saveString = JSON.stringify(saveObj);
+	
+	downloadPlaintext(Timeline.projectData.id + ".json", saveString);
 	
 	//prompt("Save this:", saveString);
 });
 
 $("#btn-upload-file").on("click", function() {
 	
-	//console.log($("#input-project-upload").get(0).files);
-	/*
-	var f = $("#input-project-upload").get(0).files[0];
-	var fReader = new FileReader();
-	
-	fReader.onload = (function(theFile) {
-		return function(e) {
-			alert(theFile.result);
-		}
-	})(f);*/
-
 	uploadFile("#input-project-upload", onProjectFileLoad);
 });
 
@@ -79,12 +70,41 @@ $("#btn-set-on").on("click", function() {
 });
 
 // Settings Modal
-$("#input-project-name").on("change", function() {
+/*$("#input-project-name").on("change", function() {
 	$("title").html($("#input-project-name").val());
-});
+});*/
 
 $("#input-music-upload").on("change", function() {
 	uploadAudio($("#input-music-upload"));
+});
+
+// New project model
+$("#btn-new-project").on("click", function() {
+	
+	/*var newName = $("#input-new-project-name").val();
+	
+	if(newName == "") {
+		popToast("Please fill in the name");
+		return;
+	}
+	
+	var newId = idify(newName);
+	
+	popToast("New ID: " + newId);
+	
+	Timeline.projectData.name = newName;
+	Timeline.projectData.id = newId;
+	
+	for(let i = 0; i < Timeline.tracks.length; i++) {
+		Timeline.tracks[i].keyframes = [];
+	}
+	
+	popToast("Project '" + newName + "' created");
+	
+	$(".modal").modal("close");*/
+	
+	createNewProject();
+	
 });
 
 document.addEventListener("keydown", function(e) {
@@ -94,52 +114,6 @@ document.addEventListener("keydown", function(e) {
 		mediaPlayPause(); 
 	}
 });
-
-
-// ******************************************************
-// FILE UPLOADING
-
-function uploadFile(inputElement, onLoadHandler) {
-
-	var fileObject = $(inputElement).get(0);
-
-	var reader = new FileReader();
-	if (fileObject.files.length) {
-		var textFile = fileObject.files[0];
-		// Read the file
-		reader.readAsText(textFile);
-		// When it's loaded, process it
-		$(reader).on('load', onLoadHandler);
-	}
-	else {
-		popToast("Please select a file", true);
-	}
-
-}
-
-function onProjectFileLoad(e) {
-	var fileContents = e.target.result;
-	
-	if(fileContents && fileContents.length) {
-		try {
-			Timeline.tracks = JSON.parse(fileContents);
-			$(".modal").modal("close"); // Close all modals
-			popToast("Project loaded");
-		}
-		catch (e) {
-			popToast("Project file is invalid", true);
-		}
-	}
-	else {
-		popToast("Error loading file", true);
-	}
-}
-
-function uploadAudio(audioInputElement) {
-	var files = audioInputElement.get(0).files;
-	var file = URL.createObjectURL(files[0]); 
-	wavesurfer.load(file);
-}
 
 // ******************************************************
 // WAVEFORM TESTING
