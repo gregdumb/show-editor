@@ -15,8 +15,9 @@ const LEFTCLICK = 1;
 const MIDCLICK = 2;
 const RIGHTCLICK = 3;
 
-// Toast
+const API_PATH = "/xmas-admin/";
 
+// Toast
 function popToast(text, bad = false) {
 	let color = (bad) ? "red darken-4" : "grey darken-4";
 	Materialize.toast(text, 4000, color);

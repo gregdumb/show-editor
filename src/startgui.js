@@ -25,12 +25,12 @@ $(document).ready(function() {
 
 $("#btn-download").on("click", function() {
 	
-	var saveObj = Timeline.getProjectObject();
-	var saveString = JSON.stringify(saveObj);
+	//var saveObj = Timeline.getProjectObject();
+	//var saveString = JSON.stringify(saveObj);
+	//
+	//downloadPlaintext(Timeline.projectData.id + ".json", saveString);
 	
-	downloadPlaintext(Timeline.projectData.id + ".json", saveString);
-	
-	//prompt("Save this:", saveString);
+	saveRemoteProject();
 });
 
 $("#btn-upload-file").on("click", function() {
@@ -106,6 +106,43 @@ $("#btn-new-project").on("click", function() {
 	createNewProject();
 	
 });
+
+// Open remote project modal
+$("#btn-open-remote-modal").on("click", function() {
+	updateRemoteProjectList();
+});
+
+$("#btn-open-remote-project").on("click", function() {
+	var toOpen = $("#select-remote-projects").val();
+	
+	openRemoteProject(toOpen);
+	
+});
+
+function updateRemoteProjectList() {
+	
+	var projectDropdown = $("#select-remote-projects");
+	projectDropdown.empty();
+	projectDropdown.material_select();
+	
+	getRemoteProjectList(function(newList) {
+		console.log(newList);
+		
+		for(let i = 0; i < newList.length; i++) {
+			let newString = newList[i];
+			
+			let newOption = $("<option>").attr('value', newString).text(newString);
+			
+			projectDropdown.append(newOption);
+			
+			//console.log(newString);
+		}
+		
+		// Refresh
+		projectDropdown.material_select();
+	});
+}
+
 
 document.addEventListener("keydown", function(e) {
 	var key = e.keyCode;

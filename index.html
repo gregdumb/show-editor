@@ -21,7 +21,7 @@
 		<!-- TOOLBAR -->
 		<div id="toolbar-container">
 			<!-- OPEN REMOTE PROJECT -->
-			<a class="waves-effect red waves-light btn modal-trigger" href="#modal-open-remote" id="btn-new">
+			<a class="waves-effect red waves-light btn modal-trigger" href="#modal-open-remote" id="btn-open-remote-modal">
 				<i class="material-icons left">file_download</i> OPEN REMOTE
 			</a>
 			
@@ -124,17 +124,14 @@
 		<div class="modal-content">
 			<h4>Open Project from PHP</h4>
 			<div class="input-field">
-				<select>
+				<select id="select-remote-projects">
 					<option value="" disabled selected>Choose your option</option>
-					<option value="1">Option 1</option>
-					<option value="2">Option 2</option>
-					<option value="3">Option 3</option>
 				</select>
 			</div>
 		</div>
 		<div class="modal-footer" id="modalfooter1">
 			<a href="#!" class="modal-action modal-close waves-effect red darken-2 waves-red btn"><i class="material-icons left">close</i>Cancel</a>
-			<a class="waves-effect waves-light btn" id="btn-open-remote-file"><i class="material-icons left">check</i>Open</a>
+			<a class="waves-effect waves-light btn" id="btn-open-remote-project"><i class="material-icons left">check</i>Open</a>
 			<!--a href="#!" class="modal-action modal-close waves-effect red waves-red btn">Upload</a-->
 		</div>
 	</div>

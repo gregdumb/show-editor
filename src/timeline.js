@@ -1044,10 +1044,12 @@ Timeline.tracksToShowfile = function() {
 		stringKeyframes += newString;
 	}
 	
-	downloadPlaintext("exportedshow.txt", stringKeyframes);
+	//downloadPlaintext("exportedshow.txt", stringKeyframes);
 	
 	console.log(groupedKeyframes);
 	console.log(finalKeyframes);
+	
+	return stringKeyframes;
 }
 
 //Timeline.undoHandler.stack = [null, null, null, null];

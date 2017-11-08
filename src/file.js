@@ -62,15 +62,6 @@ function uploadAudio(audioInputElement) {
 
 function createNewProject() {
 	
-	var formData = new FormData($("#form-new-project"));
-	
-	console.log(formData);
-	
-	var xhr = new XMLHttpRequest();
-	// Add any event handlers here...
-	xhr.open('POST', 'http://localhost/xmas-admin/createproject.php', true);
-	xhr.send(formData);
-	
 	// Get number of tracks
 	var numTracks = parseInt($("#input-num-channels").val());
 	if(numTracks < 1) {
@@ -93,27 +84,99 @@ function createNewProject() {
 		"id": newId
 	};
 	
-	// Create tracks
+	// Create project file
 	var newTracks = createTrackArray(numTracks);
-	
 	var newProjectObject = {
 		"projectData": newProjectData,
 		"tracks": newTracks
 	};
-	
 	var newProjectString = JSON.stringify(newProjectObject);
+	var newProjectFile = new Blob([newProjectString], { type: "application/json"});
+	
+	console.log(newProjectString);
 	
 	// Get audio file
-	var audioFile = $("#input-audio-upload").val();
+	var newAudioFile = $("#input-audio-upload").get(0).files[0];
 	
-	console.log(audioFile);
+	// Create form data
+	var formData = new FormData();
+	formData.append("projectName", newName);
+	formData.append("audioFile", newAudioFile);
+	//formData.append("projectFile", newProjectFile);
+	formData.append("projectText", newProjectString);
+	
+	console.log(formData);
+	
+	var xhr = new XMLHttpRequest();
+	// Add any event handlers here...
+	xhr.open('POST', API_PATH + "createproject.php", true);
+	
+	xhr.onload = function() {
+		alert(xhr.response);
+	}
+	
+	xhr.send(formData);
 	
 }
 
-function getAllProjects() {
-	
+function getRemoteProjectList(callbackFunction) {
+	$.get(API_PATH + "getprojects.php", function(data) {
+		var projectArray = JSON.parse(data);
+		callbackFunction(projectArray);
+	});
 }
 
+function openRemoteProject(newProject) {
+	
+	if(newProject != "") {
+		popToast("Opening " + newProject);
+	}
+	else {
+		popToast("Project not found");
+		return;
+	}
+	
+	var projectURL = API_PATH + "projects/" + newProject + ".json";
+	
+	// Load project file
+	$.get(projectURL, function(data) {
+		console.log(data);
+		var projectObject = data;// JSON.parse(data);
+		Timeline.loadProjectObject(projectObject);
+	});
+	
+	// Load audio file
+	$.get(API_PATH + "getaudio.php?id=" + newProject, function(data) {
+		
+		var audioURL = API_PATH + "audio/" + data;
+		
+		wavesurfer.load(audioURL);
+	});
+}
+
+function saveRemoteProject() {
+	
+	var showString = Timeline.tracksToShowfile();
+	
+	var projectObject = Timeline.getProjectObject();
+	var projectString = JSON.stringify(projectObject);
+	
+	var formData = new FormData();
+	
+	formData.append("projectText", projectString);
+	formData.append("showText", showString);
+	
+	var saveURL = API_PATH + "saveproject.php?projectId=" + Timeline.projectData.id;
+	
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', saveURL, true);
+	
+	xhr.onload = function() {
+		alert(xhr.response);
+	}
+	
+	xhr.send(formData);
+}
 
 function createTrackArray(numTracks) {
 	
