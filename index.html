@@ -21,23 +21,23 @@
 		<!-- TOOLBAR -->
 		<div id="toolbar-container">
 			<!-- OPEN REMOTE PROJECT -->
-			<a class="waves-effect red waves-light btn modal-trigger" href="#modal-open-remote" id="btn-open-remote-modal">
-				<i class="material-icons left">file_download</i> OPEN REMOTE
+			<a class="waves-effect waves-light btn modal-trigger" href="#modal-open-remote" id="btn-open-remote-modal">
+				<i class="material-icons left">folder_open</i> OPEN
 			</a>
 			
-			<!-- DOWNLOAD BUTTON -->
-			<a class="waves-effect waves-light btn" id="btn-download">
-				<i class="material-icons left">file_download</i> Save Project
+			<!-- SAVE BUTTON -->
+			<a class="waves-effect waves-light btn" id="btn-save-remote">
+				<i class="material-icons left">save</i> SAVE
 			</a>
 			
-			<!-- UPLOAD BUTTON -->
-			<a class="waves-effect waves-light btn modal-trigger" href="#modal-upload" id="btn-upload">
-				<i class="material-icons left">file_upload</i> Open Project
-			</a>
-				
 			<!-- NEW BUTTON -->
 			<a class="waves-effect waves-light btn modal-trigger" href="#modal-new" id="btn-new">
-				<i class="material-icons left">create_new_folder</i> New Project
+				<i class="material-icons left">create_new_folder</i> NEW
+			</a>
+			
+			<!-- IMPORT BUTTON -->
+			<a class="waves-effect waves-light tooltipped btn modal-trigger" href="#modal-import" id="btn-import-modal" data-tooltip="Import a local project file">
+				<i class="material-icons left">open_in_browser</i> IMPORT
 			</a>
 			
 			<!-- EXPORT BUTTON -->
@@ -98,13 +98,13 @@
 				  
 	</div>
 	
-	<!-- PROJECT UPLOAD MODAL -->
-	<div id="modal-upload" class="modal">
+	<!-- PROJECT IMPORT MODAL -->
+	<div id="modal-import" class="modal">
 		<div class="modal-content">
-			<h4>Open Project File</h4>
+			<h4>Import Local Project File</h4>
 			<div class="file-field input-field">
 				<div class="btn">
-					<span>File</span>
+					<span>OPEN</span>
 					<input type="file" id="input-project-upload">
 				</div>
 				<div class="file-path-wrapper">

@@ -73,6 +73,7 @@ Timeline.init = function() {
 	this.canvas.id = "timeline-canvas";
 	this.canvas.height = this.height;
 	this.canvas.width = window.innerWidth;
+	this.canvas.setAttribute("tabindex", 1);
 	this.ctx = this.canvas.getContext("2d");
 	this.container.append(this.canvas);
 	
@@ -87,8 +88,8 @@ Timeline.init = function() {
 	document.addEventListener("mouseup", this.mouseUp);
 	//this.canvas.addEventListener("mouseout", this.mouseUp);
 	this.canvas.addEventListener("wheel", this.mouseWheel);
-	document.addEventListener("keydown", this.keyDown);
-	document.addEventListener("keyup", this.keyUp);
+	this.canvas.addEventListener("keydown", this.keyDown);
+	this.canvas.addEventListener("keyup", this.keyUp);
 }
 
 Timeline.getProjectObject = function() {
@@ -304,6 +305,10 @@ Timeline.mouseWheel = function(e) {
 }
 
 Timeline.keyDown = function(e) {
+	// Cancel if the user is not in the canvas
+	if(!$(document.activeElement).is("canvas")) {
+		return;
+	}
 	
 	// Switch based on key
 	var key = e.keyCode;

@@ -23,7 +23,20 @@ $(document).ready(function() {
 	$('.modal').modal();
 });
 
-$("#btn-download").on("click", function() {
+// OPEN MODAL
+$("#btn-open-remote-modal").on("click", function() {
+	updateRemoteProjectList();
+});
+
+// OPEN PROJECT
+$("#btn-open-remote-project").on("click", function() {
+	var toOpen = $("#select-remote-projects").val();
+	
+	openRemoteProject(toOpen);
+});
+
+// SAVE
+$("#btn-save-remote").on("click", function() {
 	
 	//var saveObj = Timeline.getProjectObject();
 	//var saveString = JSON.stringify(saveObj);
@@ -107,18 +120,6 @@ $("#btn-new-project").on("click", function() {
 	
 });
 
-// Open remote project modal
-$("#btn-open-remote-modal").on("click", function() {
-	updateRemoteProjectList();
-});
-
-$("#btn-open-remote-project").on("click", function() {
-	var toOpen = $("#select-remote-projects").val();
-	
-	openRemoteProject(toOpen);
-	
-});
-
 function updateRemoteProjectList() {
 	
 	var projectDropdown = $("#select-remote-projects");
@@ -145,6 +146,10 @@ function updateRemoteProjectList() {
 
 
 document.addEventListener("keydown", function(e) {
+	if(!$(document.activeElement).is("canvas")) {
+		return;
+	}
+	
 	var key = e.keyCode;
 	
 	if(key == KEY_SPACE) {
