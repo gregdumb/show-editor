@@ -2,7 +2,7 @@
 
 
 // Check to see if we have a server
-var modeRequest = $.get(API_PATH + "getprojectss.php");
+var modeRequest = $.get(API_PATH + "getprojects.php");
 
 // Remote 
 modeRequest.success(function(result) {

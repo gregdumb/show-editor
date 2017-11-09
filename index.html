@@ -152,25 +152,23 @@
 	<div id="modal-new" class="modal">
 		<div class="modal-content">
 			<h4>New Project</h4>
-			<form id="form-new-project" method="post" enctype="multipart/form-data">
-				<div class="input-field">
-					<input id="input-new-project-name" type="text" class="validate">
-					<label for="input-new-project-name">Project Name</label>
+			<div class="input-field">
+				<input id="input-new-project-name" type="text" class="validate">
+				<label for="input-new-project-name">Project Name</label>
+			</div>
+			<div class="input-field">
+				<input id="input-num-channels" type="number" value="8" class="validate">
+				<label for="input-num-channels">Number of Channels</label>
+			</div>
+			<div class="file-field input-field">
+				<div class="btn">
+					<span>Audio File</span>
+					<input type="file" id="input-audio-upload">
 				</div>
-				<div class="file-field input-field">
-					<div class="btn">
-						<span>Audio File</span>
-						<input type="file" id="input-audio-upload">
-					</div>
-					<div class="file-path-wrapper">
-						<input class="file-path validate" type="audio/*">
-					</div>
+				<div class="file-path-wrapper">
+					<input class="file-path validate" type="audio/*">
 				</div>
-				<div class="input-field">
-					<input id="input-num-channels" type="number" class="validate">
-					<label for="input-num-channels">Number of Channels</label>
-				</div>
-			</form>
+			</div>
 		</div>
 		<div class="modal-footer" id="modal-new-footer">
 			<a href="#!" class="modal-action modal-close waves-effect red darken-2 waves-red btn"><i class="material-icons left">close</i>Cancel</a>
