@@ -48,7 +48,7 @@ $("#btn-save-remote").on("click", function() {
 
 $("#btn-upload-file").on("click", function() {
 	
-	uploadFile("#input-project-upload", onProjectFileLoad);
+	openLocalFile("#input-project-upload", onProjectFileLoad);
 });
 
 $("#btn-export").on("click", function() {
@@ -177,13 +177,12 @@ function mediaStop() {
 	$("#icon-play").html("play_arrow");
 }
 
-wavesurfer.load("./WizardsInWinter.mp3");
+//wavesurfer.load("./WizardsInWinter.mp3");
 
 wavesurfer.on("ready", function() {
 	//wavesurfer.play();
 	wavesurfer.zoom(Timeline.timeScale);
 	Timeline.duration = wavesurfer.getDuration();
-	console.log(Timeline.duration);
 });
 
 wavesurfer.on("seek", function() {

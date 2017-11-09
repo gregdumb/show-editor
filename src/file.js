@@ -2,7 +2,11 @@
  * Handles file/project loading
  */
 
- // File downloading
+
+/*****************************************
+ * LOCAL FILE UPLOAD/DOWNLOAD
+ */
+
 function downloadPlaintext(filename, text) {
 	var element = document.createElement('a');
 	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -16,7 +20,7 @@ function downloadPlaintext(filename, text) {
 	document.body.removeChild(element);
 }
 
- function uploadFile(inputElement, onLoadHandler) {
+ function openLocalFile(inputElement, onLoadHandler) {
 
 	var fileObject = $(inputElement).get(0);
 
@@ -59,7 +63,11 @@ function uploadAudio(audioInputElement) {
 	wavesurfer.load(file);
 }
 
+/*****************************************
+ * REMOTE UPLOAD/DOWNLOAD
+ */
 
+ // CREATE PROJECT
 function createNewProject() {
 	
 	// Get number of tracks
@@ -119,12 +127,7 @@ function createNewProject() {
 	
 }
 
-function getRemoteProjectList(callbackFunction) {
-	$.get(API_PATH + "getprojects.php", function(data) {
-		var projectArray = JSON.parse(data);
-		callbackFunction(projectArray);
-	});
-}
+
 
 function openRemoteProject(newProject) {
 	
@@ -176,6 +179,13 @@ function saveRemoteProject() {
 	}
 	
 	xhr.send(formData);
+}
+
+function getRemoteProjectList(callbackFunction) {
+	$.get(API_PATH + "getprojects.php", function(data) {
+		var projectArray = JSON.parse(data);
+		callbackFunction(projectArray);
+	});
 }
 
 function createTrackArray(numTracks) {

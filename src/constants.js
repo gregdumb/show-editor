@@ -15,7 +15,19 @@ const LEFTCLICK = 1;
 const MIDCLICK = 2;
 const RIGHTCLICK = 3;
 
+// Path to folder with PHP
 const API_PATH = "/xmas-admin/";
+
+const APP_NAME = "Lightshow Editor";
+
+function updateProjectName(newName) {
+	
+	var newTitle = newName + " - " + APP_NAME;
+	
+	$("title").html(newTitle);
+	
+	
+}
 
 // Toast
 function popToast(text, bad = false) {
