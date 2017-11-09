@@ -253,8 +253,10 @@ Timeline.mouseMoved = function(e) {
 	else if(t.state.draggingPan) {
 		var deltaX = t.timePanStartX - x;
 		var deltaTime = deltaX / t.timeScale;
-		//console.log(t.timePanStartViewPosition);
-		t.timeViewPosition = Math.clamp(t.timePanStartViewPosition + deltaTime, 0, t.duration);
+		var timelineWidth = (t.canvas.width - t.sideBarWidth) / t.timeScale;
+		console.log("WIDTH", timelineWidth);
+		var maxScroll = Math.max(0, t.duration - timelineWidth);
+		t.timeViewPosition = Math.clamp(t.timePanStartViewPosition + deltaTime, 0, maxScroll);
 		console.log("Setting ScrollLeft to:", t.timeViewPosition * t.timeScale);
 		wavesurfer.setScroll(Math.ceil(t.timeViewPosition * t.timeScale));
 		//wavesurfer.drawBuffer();
