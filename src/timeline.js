@@ -2,8 +2,8 @@
 Timeline.init = function() {
 	
 	this.projectData = {
-		"name": "Wizards in Winter",
-		"id": "wizards_in_winter"
+		"name": "",
+		"id": ""
 	}
 	
 	// UI variables
@@ -1047,10 +1047,8 @@ Timeline.tracksToShowfile = function() {
 		stringKeyframes += newString;
 	}
 	
-	//downloadPlaintext("exportedshow.txt", stringKeyframes);
-	
-	console.log(groupedKeyframes);
-	console.log(finalKeyframes);
+	//console.log(groupedKeyframes);
+	//console.log(finalKeyframes);
 	
 	return stringKeyframes;
 }

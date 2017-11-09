@@ -4,7 +4,7 @@
 
 
 /*****************************************
- * LOCAL FILE UPLOAD/DOWNLOAD
+ * LOCAL FILE UPLOAD/DOWNLOAD, GENERIC
  */
 
 function downloadPlaintext(filename, text) {
@@ -57,10 +57,23 @@ function onProjectFileLoad(e) {
 	}
 }
 
+
+// NOT USED?
 function uploadAudio(audioInputElement) {
 	var files = audioInputElement.get(0).files;
 	var file = URL.createObjectURL(files[0]); 
 	wavesurfer.load(file);
+}
+
+/*****************************************
+ * LOCAL FILE UPLOAD/DOWNLOAD, SPECIFIC
+ */
+
+function exportLocalShowfile() {
+	var showText = Timeline.tracksToShowfile();
+	var showFilename = Timeline.projectData.id + ".txt";
+	
+	downloadPlaintext(showFilename, showText);
 }
 
 /*****************************************
@@ -92,39 +105,43 @@ function createNewProject() {
 		"id": newId
 	};
 	
-	// Create project file
+	// Create project object
 	var newTracks = createTrackArray(numTracks);
 	var newProjectObject = {
 		"projectData": newProjectData,
 		"tracks": newTracks
 	};
-	var newProjectString = JSON.stringify(newProjectObject);
-	var newProjectFile = new Blob([newProjectString], { type: "application/json"});
-	
-	console.log(newProjectString);
 	
 	// Get audio file
 	var newAudioFile = $("#input-audio-upload").get(0).files[0];
 	
-	// Create form data
-	var formData = new FormData();
-	formData.append("projectName", newName);
-	formData.append("audioFile", newAudioFile);
-	//formData.append("projectFile", newProjectFile);
-	formData.append("projectText", newProjectString);
-	
-	console.log(formData);
-	
-	var xhr = new XMLHttpRequest();
-	// Add any event handlers here...
-	xhr.open('POST', API_PATH + "createproject.php", true);
-	
-	xhr.onload = function() {
-		alert(xhr.response);
+	if(mode === MODE_LOCAL) {
+		
+		Timeline.loadProjectObject(newProjectObject);
+		var audioURL = URL.createObjectURL(newAudioFile); 
+		wavesurfer.load(audioURL);
 	}
-	
-	xhr.send(formData);
-	
+	else {
+		var newProjectString = JSON.stringify(newProjectObject);
+		var newProjectFile = new Blob([newProjectString], { type: "application/json"});
+		
+		// Create form data
+		var formData = new FormData();
+		formData.append("projectName", newName);
+		formData.append("audioFile", newAudioFile);
+		//formData.append("projectFile", newProjectFile);
+		formData.append("projectText", newProjectString);
+		
+		var xhr = new XMLHttpRequest();
+		// Add any event handlers here...
+		xhr.open('POST', API_PATH + "createproject.php", true);
+		
+		xhr.onload = function() {
+			alert(xhr.response);
+		}
+		
+		xhr.send(formData);
+	}
 }
 
 

@@ -15,9 +15,16 @@ const LEFTCLICK = 1;
 const MIDCLICK = 2;
 const RIGHTCLICK = 3;
 
+const MODE_LOCAL = 0;
+const MODE_REMOTE = 1;
+
+// Remote or local
+var mode = MODE_REMOTE;
+
 // Path to folder with PHP
 const API_PATH = "/xmas-admin/";
 
+// Name to draw in title bar
 const APP_NAME = "Lightshow Editor";
 
 function updateProjectName(newName) {

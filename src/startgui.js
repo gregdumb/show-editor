@@ -1,14 +1,34 @@
 
 
+
+// Check to see if we have a server
+var modeRequest = $.get(API_PATH + "getprojectss.php");
+
+// Remote 
+modeRequest.success(function(result) {
+	console.log("Connected to remote server", result);
+	popToast("Connected to show server");
+	mode = MODE_REMOTE;
+	$(".LOCAL").remove();
+	
+	// Open default project
+	var projectArray = JSON.parse(result);
+	var firstProject = projectArray[0];
+});
+
+modeRequest.error(function(result) {
+	console.log("Remote server not found, entering local mode");
+	popToast("No show server found; editor only");
+	mode = MODE_LOCAL;
+	$(".REMOTE").remove();
+});
+
 Timeline.init();
 
+// Disable right clicks
 $("body").on("contextmenu", "#timeline-canvas", function(e) {
 	return false;
 });
-
-/*setInterval(function() {
-	Timeline.update();
-}, 1000 / 120);*/
 
 // Start rendering
 timelineRenderUpdate();
@@ -28,96 +48,74 @@ $("#btn-open-remote-modal").on("click", function() {
 	updateRemoteProjectList();
 });
 
+// CREATE NEW PROJECT
+$("#btn-new-project").on("click", function() {
+	createNewProject();
+});
+
 // OPEN PROJECT
 $("#btn-open-remote-project").on("click", function() {
 	var toOpen = $("#select-remote-projects").val();
-	
 	openRemoteProject(toOpen);
 });
 
 // SAVE
 $("#btn-save-remote").on("click", function() {
-	
-	//var saveObj = Timeline.getProjectObject();
-	//var saveString = JSON.stringify(saveObj);
-	//
-	//downloadPlaintext(Timeline.projectData.id + ".json", saveString);
-	
 	saveRemoteProject();
 });
 
+// IMPORT PROJECT
 $("#btn-upload-file").on("click", function() {
-	
 	openLocalFile("#input-project-upload", onProjectFileLoad);
 });
 
+// EXPORT PROJECT
 $("#btn-export").on("click", function() {
-	Timeline.tracksToShowfile();
+	var saveObj = Timeline.getProjectObject();
+	var saveString = JSON.stringify(saveObj);
+	
+	downloadPlaintext(Timeline.projectData.id + ".json", saveString);
 });
 
+// EXPORT SHOW
+$("#btn-export-show").on("click", function() {
+	exportLocalShowfile();
+});
+
+// UPLOAD AUDIO
+$("#btn-music-upload").on("click", function() {
+	uploadAudio($("#input-music-upload"));
+});
+
+// PLAY
 $("#btn-play").on("click", function() {
 	mediaPlayPause();
 });
 
+// PAUSE
 $("#btn-stop").on("click", function() {
 	mediaStop();
 });
 
+// CHANGE PLAYBACK SPEED
 $("#select-rate").on("change", function() {
-	
 	let newRate = $("#select-rate").val();
 	wavesurfer.setPlaybackRate(newRate);
-	console.log(newRate);
 });
 
+// ALIGN KEYFRAMES
 $("#btn-align").on("click", function() {
 	Timeline.performAlign();
 });
 
+// REMOVE DUPLICATES
 $("#btn-remove-dups").on("click", function() {
 	Timeline.removeDuplicateKeyframes();
 });
 
+// TURN KEYFRAMES ON
 $("#btn-set-on").on("click", function() {
 	Timeline.setKeyframesOn();
-});
-
-// Settings Modal
-/*$("#input-project-name").on("change", function() {
-	$("title").html($("#input-project-name").val());
-});*/
-
-$("#input-music-upload").on("change", function() {
-	uploadAudio($("#input-music-upload"));
-});
-
-// New project model
-$("#btn-new-project").on("click", function() {
-	
-	/*var newName = $("#input-new-project-name").val();
-	
-	if(newName == "") {
-		popToast("Please fill in the name");
-		return;
-	}
-	
-	var newId = idify(newName);
-	
-	popToast("New ID: " + newId);
-	
-	Timeline.projectData.name = newName;
-	Timeline.projectData.id = newId;
-	
-	for(let i = 0; i < Timeline.tracks.length; i++) {
-		Timeline.tracks[i].keyframes = [];
-	}
-	
-	popToast("Project '" + newName + "' created");
-	
-	$(".modal").modal("close");*/
-	
-	createNewProject();
-	
 });
 
 function updateRemoteProjectList() {
