@@ -59,7 +59,8 @@ Timeline.init = function() {
 	this.state.holdingControl = false;
 
 	// Undo
-	this.undoBuffer = new CBuffer(64);
+	this.undoBufferSize = 64;
+	this.undoBuffer = new CBuffer(this.undoBufferSize);
 	
 	// Keyframing
 	this.tracks = [];
@@ -103,6 +104,8 @@ Timeline.getProjectObject = function() {
 }
 
 Timeline.loadProjectObject = function(obj) {
+	
+	this.emptyUndoBuffer();
 	
 	this.projectData = obj.projectData;
 	this.tracks = obj.tracks;
@@ -946,6 +949,11 @@ Timeline.saveUndoState = function() {
 	if(s.length < this.undoStackSize) {
 		s.push(newState);
 	}*/
+}
+
+Timeline.emptyUndoBuffer = function() {
+	this.undoBuffer.empty();
+	this.undoBuffer = new CBuffer(this.undoBufferSize);
 }
 
 Timeline.tracksToShowfile = function() {

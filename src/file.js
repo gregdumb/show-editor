@@ -86,14 +86,22 @@ function createNewProject() {
 	// Get number of tracks
 	var numTracks = parseInt($("#input-num-channels").val());
 	if(numTracks < 1) {
-		popToast("Enter number of tracks");
+		popToast("Please enter the number of tracks");
 		return;
 	}
 	
 	// Get input name
 	var newName = $("#input-new-project-name").val();
 	if(newName == "") {
-		popToast("Please fill in the name");
+		popToast("Please fill in the project name");
+		return;
+	}
+	
+	
+	// Get audio file
+	var newAudioFile = $("#input-audio-upload").get(0).files[0];
+	if($("#input-audio-upload").val() == "") {
+		popToast("Please select a song file");
 		return;
 	}
 	
@@ -111,9 +119,6 @@ function createNewProject() {
 		"projectData": newProjectData,
 		"tracks": newTracks
 	};
-	
-	// Get audio file
-	var newAudioFile = $("#input-audio-upload").get(0).files[0];
 	
 	if(mode === MODE_LOCAL) {
 		
@@ -137,11 +142,13 @@ function createNewProject() {
 		xhr.open('POST', API_PATH + "createproject.php", true);
 		
 		xhr.onload = function() {
-			alert(xhr.response);
+			popToast(xhr.response);
 		}
 		
 		xhr.send(formData);
 	}
+	
+	$(".modal").modal("close");
 }
 
 
@@ -161,8 +168,10 @@ function openRemoteProject(newProject) {
 	// Load project file
 	$.get(projectURL, function(data) {
 		console.log(data);
-		var projectObject = data;// JSON.parse(data);
+		var projectObject = data;
 		Timeline.loadProjectObject(projectObject);
+		
+		$(".modal").modal("close");
 	});
 	
 	// Load audio file
