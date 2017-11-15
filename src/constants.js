@@ -22,7 +22,8 @@ const MODE_REMOTE = 1;
 var mode = MODE_REMOTE;
 
 // Path to folder with PHP
-const API_PATH = "/xmas-admin/";
+const API_PATH = "../api/";
+const FILE_PATH = "../data/";
 
 // Name to draw in title bar
 const APP_NAME = "Lightshow Editor";

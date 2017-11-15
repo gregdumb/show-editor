@@ -71,9 +71,21 @@ function uploadAudio(audioInputElement) {
 
 function exportLocalShowfile() {
 	var showText = Timeline.tracksToShowfile();
-	var showFilename = Timeline.projectData.id + ".txt";
 	
-	downloadPlaintext(showFilename, showText);
+	var saveName = Timeline.projectData.id;
+	if(saveName == "") saveName = "untitled";
+	
+	downloadPlaintext(saveName + ".txt", showText);
+}
+
+function exportLocalProject() {
+	var saveObj = Timeline.getProjectObject();
+	var saveString = JSON.stringify(saveObj);
+	
+	var saveName = Timeline.projectData.id;
+	if(saveName == "") saveName = "untitled";
+	
+	downloadPlaintext(saveName + ".json", saveString);
 }
 
 /*****************************************
@@ -163,7 +175,7 @@ function openRemoteProject(newProject) {
 		return;
 	}
 	
-	var projectURL = API_PATH + "projects/" + newProject + ".json";
+	var projectURL = FILE_PATH + "projects/" + newProject + ".json";
 	
 	// Load project file
 	$.get(projectURL, function(data) {
@@ -177,7 +189,7 @@ function openRemoteProject(newProject) {
 	// Load audio file
 	$.get(API_PATH + "getaudio.php?id=" + newProject, function(data) {
 		
-		var audioURL = API_PATH + "audio/" + data;
+		var audioURL = FILE_PATH + "audio/" + data;
 		
 		wavesurfer.load(audioURL);
 	});

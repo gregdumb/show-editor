@@ -71,10 +71,7 @@ $("#btn-upload-file").on("click", function() {
 
 // EXPORT PROJECT
 $("#btn-export").on("click", function() {
-	var saveObj = Timeline.getProjectObject();
-	var saveString = JSON.stringify(saveObj);
-	
-	downloadPlaintext(Timeline.projectData.id + ".json", saveString);
+	exportLocalProject();
 });
 
 // EXPORT SHOW
