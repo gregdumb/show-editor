@@ -743,6 +743,9 @@ Timeline.getSelectedKeyframes = function() {
 }
 
 Timeline.deleteSelectedKeyframes = function() {
+	
+	var undoStateSaved = false;
+	
 	for(let i = 0; i < this.tracks.length; i++) {
 		
 		var t = this.tracks[i];
@@ -754,7 +757,10 @@ Timeline.deleteSelectedKeyframes = function() {
 			}
 		}
 
-		if(toRemove.length) this.saveUndoState(); // Only save undo state if we actually had anything selected
+		if(toRemove.length && !undoStateSaved) {
+			this.saveUndoState(); // Only save undo state if we actually had anything selected
+			undoStateSaved = true;
+		}
 		
 		for(let k = toRemove.length - 1; k >= 0; k--) {
 			t.keyframes.splice(toRemove[k], 1);
@@ -863,6 +869,12 @@ Timeline.performAlign = function() {
 		selectedKeyframes[k].time = avgTime;
 		selectedKeyframes[k].oldTime = avgTime;
 	}
+}
+
+Timeline.performEqualSpace = function() {
+	
+	this.saveUndoState();
+	
 }
 
 Timeline.performKeyframeInvert = function() {
