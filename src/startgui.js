@@ -21,6 +21,9 @@ modeRequest.error(function(result) {
 	popToast("No show server found; editor only");
 	mode = MODE_LOCAL;
 	$(".REMOTE").remove();
+	
+	// Open default headless project
+	loadDefaultProject();
 });
 
 Timeline.init();

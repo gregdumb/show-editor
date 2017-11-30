@@ -65,6 +65,21 @@ function uploadAudio(audioInputElement) {
 	wavesurfer.load(file);
 }
 
+// Only used in "bodiless" mode (i.e. no server)
+function loadDefaultProject() {
+	
+	var project_url = "./default_show/default.json";
+	var audio_url = "./default_show/default.mp3";
+	
+	$.get(project_url, function(data) {
+		Timeline.loadProjectObject(data);
+	});
+	
+	wavesurfer.load(audio_url);
+	
+	popToast("Loading default project");
+}
+
 /*****************************************
  * LOCAL FILE UPLOAD/DOWNLOAD, SPECIFIC
  */
