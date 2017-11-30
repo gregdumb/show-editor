@@ -333,8 +333,11 @@ Timeline.keyDown = function(e) {
 		Timeline.duplicateKeyframes();
 	}
 	
+	if(key == KEY_E) {
+		Timeline.performEqualSpace();
+	}
+	
 	if(key == KEY_G) {
-		//Timeline.state.draggingKeyframes = true;
 		Timeline.startDraggingKeyframes();
 	}
 	
@@ -344,6 +347,10 @@ Timeline.keyDown = function(e) {
 	
 	if(key == KEY_R) {
 		Timeline.removeDuplicateKeyframes();
+	}
+	
+	if(key == KEY_S) {
+		//Timeline.performScale();
 	}
 
 	if(key == KEY_Z) {
@@ -873,7 +880,84 @@ Timeline.performAlign = function() {
 
 Timeline.performEqualSpace = function() {
 	
+	var selectedKeyframes = this.getSelectedKeyframes();
+	var startTime = 9999;
+	var endTime = 0;
+	
+	if(selectedKeyframes.length < 3) return;
+	
 	this.saveUndoState();
+	
+	// Sort selection
+	selectedKeyframes.sort(function(a, b) {
+		return a.time - b.time;
+	});
+	
+	// Find ends of selection
+	for(let i = 0; i < selectedKeyframes.length; i++) {
+		if(selectedKeyframes[i].time < startTime) startTime = selectedKeyframes[i].time;
+		if(selectedKeyframes[i].time > endTime) endTime = selectedKeyframes[i].time;
+	}
+	
+	console.log("Start time", startTime);
+	console.log("End time", endTime);
+	
+	// Remove keyframes on ends
+	for(let i = selectedKeyframes.length - 1; i >=0; i--) {
+		
+		if(selectedKeyframes[i].time == startTime || selectedKeyframes[i].time == endTime) {
+			selectedKeyframes.splice(i, 1);
+		}
+	}
+	
+	// If all of our keyframes were at the same time we don't have any left
+	if(selectedKeyframes.length == 0) return;
+	
+	// Get number of discrete times we need
+	// @TODO take into account columns of equal times
+	var numSteps = 0;// selectedKeyframes.length;
+	
+	// Get number of unique times
+	var uniqueTimes = [];
+	for(let i = 0; i < selectedKeyframes.length; i++) {
+		let thisTime = selectedKeyframes[i].time;
+		
+		if(uniqueTimes.indexOf(thisTime) < 0 ) {
+			uniqueTimes.push(thisTime);
+		}
+	}
+	uniqueTimes.sort();
+	numSteps = uniqueTimes.length;
+	
+	console.log("Unique times:", uniqueTimes);
+	console.log("Num steps:", numSteps);
+	
+	// Put keyframes into sections based on unique times
+	var arrayOfArrays = [];
+	for(let u = 0; u < uniqueTimes.length; u++) {
+		
+		var newSection = [];
+		
+		for(let i = 0; i < selectedKeyframes.length; i++) {
+			if(selectedKeyframes[i].time == uniqueTimes[u]) {
+				newSection.push(selectedKeyframes[i]);
+			}
+		}
+		
+		arrayOfArrays.push(newSection);
+	}
+	
+	// Get the equalized distance between each unique time
+	var stepLength = (endTime - startTime) / (numSteps + 1);
+	
+	for(let i = 0; i < arrayOfArrays.length; i++) {
+		let newTime = startTime + (i+1) * stepLength;
+		
+		for(let j = 0; j < arrayOfArrays[i].length; j++) {
+			arrayOfArrays[i][j].time = newTime;
+			arrayOfArrays[i][j].oldTime = newTime;
+		}
+	}
 	
 }
 

@@ -6,9 +6,11 @@ const KEY_SPACE = 32;
 
 const KEY_A = 65;
 const KEY_D = 68;
+const KEY_E = 69;
 const KEY_G = 71;
 const KEY_I = 73;
 const KEY_R = 82;
+const KEY_S = 83;
 const KEY_Z = 90;
 
 const LEFTCLICK = 1;
