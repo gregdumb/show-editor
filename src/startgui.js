@@ -108,6 +108,11 @@ $("#btn-align").on("click", function() {
 	Timeline.performAlign();
 });
 
+// EQUAL-SPACE KEYFRAMES
+$("#btn-equal").on("click", function() {
+	Timeline.performEqualSpace();
+});
+
 // REMOVE DUPLICATES
 $("#btn-remove-dups").on("click", function() {
 	Timeline.removeDuplicateKeyframes();
