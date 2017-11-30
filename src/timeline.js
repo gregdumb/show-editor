@@ -47,6 +47,8 @@ Timeline.init = function() {
 	this.timePanStartViewPosition = 0;
 	
 	this.keyframeDragStartX = -1;
+	this.keyframeScalePivot = -1;
+	this.keyframeScaleEnd = -1;
 	
 	// State
 	this.state = {};
@@ -54,6 +56,7 @@ Timeline.init = function() {
 	this.state.draggingZoom = false;
 	this.state.draggingSelection = false;
 	this.state.draggingKeyframes = false;
+	this.state.scalingKeyframes = false;
 	this.state.draggingPan = false;
 	this.state.holdingShift = false;
 	this.state.holdingControl = false;
@@ -133,6 +136,17 @@ Timeline.mouseDown = function(e) {
 		}
 		
 		return; // Don't do anything else, just place the keyframes
+	}
+	
+	if(t.state.scalingKeyframes) {
+		if(clicked == LEFTCLICK) {
+			t.stopScalingKeyframes();
+		}
+		else if(clicked == RIGHTCLICK) {
+			t.cancelScalingKeyframes();
+		}
+		
+		return;
 	}
 	
 	// Time bar clicked
@@ -262,9 +276,9 @@ Timeline.mouseMoved = function(e) {
 		t.timeViewPosition = Math.clamp(t.timePanStartViewPosition + deltaTime, 0, maxScroll);
 		console.log("Setting ScrollLeft to:", t.timeViewPosition * t.timeScale);
 		wavesurfer.setScroll(Math.ceil(t.timeViewPosition * t.timeScale));
-		//wavesurfer.drawBuffer();
 	}
 	
+	// DRAGGING KEYFRAMES
 	else if(t.state.draggingKeyframes) {
 		
 		if(t.keyframeDragStartX == -1) t.keyframeDragStartX = x;
@@ -278,6 +292,27 @@ Timeline.mouseMoved = function(e) {
 			var k = selKeys[i];
 			
 			k.time = k.oldTime + deltaTime;
+		}
+	}
+	
+	// SCALING KEYFRAMES
+	else if(t.state.scalingKeyframes) {
+		
+		if(t.keyframeDragStartX == -1) t.keyframeDragStartX = x;
+		var deltaX = x - t.keyframeDragStartX;
+		var deltaTime = deltaX / t.timeScale;
+		
+		var startSize = t.keyframeScaleEnd - t.keyframeScalePivot;
+		var scaleSize = t.keyframeScalePivot + deltaTime;
+		
+		var selKeys = t.selectedKeyframes;
+		for(let i = 0; i < selKeys.length; i++) {
+			var k = selKeys[i];
+			
+			var pct = (k.oldTime - t.keyframeScalePivot) / startSize;
+			var myDeltaTime = pct * scaleSize;
+			
+			k.time = t.keyframeScalePivot + myDeltaTime;
 		}
 	}
 }
@@ -350,7 +385,7 @@ Timeline.keyDown = function(e) {
 	}
 	
 	if(key == KEY_S) {
-		//Timeline.performScale();
+		Timeline.startScalingKeyframes();
 	}
 
 	if(key == KEY_Z) {
@@ -649,18 +684,6 @@ Timeline.buildKeyframes = function() {
 		this.tracks.push(t);
 	}
 	
-	// Default song
-	//this.tracks = DEFAULT_TRACKS;
-	
-	// Fix any errors with time and oldtime
-	/*for(let i = 0; i < this.tracks.length; i++) {
-		let t = this.tracks[i];
-		for(let j = 0; j < t.keyframes.length; j++) {
-			let k = t.keyframes[j];
-			k.oldTime = k.time;
-		}
-	}*/
-	
 	this.updateActiveTracks();
 }
 
@@ -716,6 +739,43 @@ Timeline.stopDraggingKeyframes = function() {
 Timeline.cancelDraggingKeyframes = function() {
 	Timeline.keyframeDragStartX = -1;
 	Timeline.state.draggingKeyframes = false;
+	for(let i = 0; i < Timeline.selectedKeyframes.length; i++) {
+		Timeline.selectedKeyframes[i].time = Timeline.selectedKeyframes[i].oldTime;
+	}
+}
+
+Timeline.startScalingKeyframes = function() {
+	Timeline.saveUndoState();
+	Timeline.state.scalingKeyframes = true;
+	
+	// Get starting point
+	var first = 999;
+	var last = 0;
+	for(k in Timeline.selectedKeyframes) {
+		if(Timeline.selectedKeyframes[k].time < first) first = Timeline.selectedKeyframes[k].time;
+		if(Timeline.selectedKeyframes[k].time > last) last = Timeline.selectedKeyframes[k].time;
+	}
+	
+	Timeline.keyframeScalePivot = first;
+	Timeline.keyframeScaleEnd = last;
+	
+	console.log("FIRST", first);
+}
+
+Timeline.stopScalingKeyframes = function() {
+	Timeline.keyframeDragStartX = -1;
+	Timeline.keyframeScalePivot = -1;
+	Timeline.state.scalingKeyframes = false;
+	for(let i = 0; i < Timeline.selectedKeyframes.length; i++) {
+		Timeline.selectedKeyframes[i].oldTime = Timeline.selectedKeyframes[i].time;
+	}
+	Timeline.sortKeyframes();
+}
+
+Timeline.cancelScalingKeyframes = function() {
+	Timeline.keyframeDragStartX = -1;
+	Timeline.keyframeScalePivot = -1;
+	Timeline.state.scalingKeyframes = false;
 	for(let i = 0; i < Timeline.selectedKeyframes.length; i++) {
 		Timeline.selectedKeyframes[i].time = Timeline.selectedKeyframes[i].oldTime;
 	}
@@ -957,8 +1017,7 @@ Timeline.performEqualSpace = function() {
 			arrayOfArrays[i][j].time = newTime;
 			arrayOfArrays[i][j].oldTime = newTime;
 		}
-	}
-	
+	}	
 }
 
 Timeline.performKeyframeInvert = function() {
